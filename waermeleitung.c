@@ -60,15 +60,27 @@ void printResult(double *t, int size, char *filename) {
 int main(int argc, char **argv) {
   MPI_Init(&argc, &argv);
   // Größe des Feldes
-  int size = 128;
+  int size;
   // Anzahl Iterationen
-  int iter = 100;
+  int iter;
   // Geisterzonenbreite
-  int g = 1;
+  int g;
   // Ausgabedatei
-  char *filename = "out.ppm";
+  char filename[256];
 
-  // TODO: Übergabeparameter für [size iter g filename] einlesen
+  // Übergabeparameter für [size iter g filename] einlesen
+  if (argc != 5) {
+    printf("Nutzung: %s <size> <iter> <g> <filename>\n", argv[0]);
+    MPI_Finalize();
+    return -1;
+  }
+
+  if (!sscanf(argv[1], "%d", &size) || !sscanf(argv[2], "%d", &iter) ||
+      !sscanf(argv[3], "%d", &g) || !sscanf(argv[4], "%s", filename)) {
+    printf("Nutzung: %s <size> <iter> <g> <filename>\n", argv[0]);
+    MPI_Finalize();
+    return -1;
+  }
 
   // 2 Speicherbereiche für das Wärmefeld
   double *u1, *u2;
