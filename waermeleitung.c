@@ -88,6 +88,14 @@ int main(int argc, char **argv) {
   // Ausgabedatei
   char filename[256];
 
+  // TODO: beliebige alpha zulassen (wird aber eigentlich nur für das ermitteln
+  // der Zeit am Ende benötigt)
+  // TODO: beliebige Seitenlängen a zulassen
+  // TODO: beliebigen Sicherheitsfaktor für die Schrittweite zulassen
+  double alpha = 1.0;
+  double a = 1.0;
+  double adj = 1.0;
+
   // Übergabeparameter für [size iter g filename] einlesen
   if (argc != 5) {
     printf("Nutzung: %s <size> <iter> <g> <filename>\n", argv[0]);
@@ -117,6 +125,20 @@ int main(int argc, char **argv) {
   //      das die Temperaturen u_k mit einer beliebigen
   //      Anzahl von p Prozessoren unter Verwendung von MPI berechnet.
   //      Der Austausch der Randbereiche soll alle g Schritte passieren.
+
+  // Berechne Schwrittweite.
+  double adjstep = adj * 0.25;
+
+  // Iteration.
+  int k, i, j;
+  for (k = 0; k < iter; k++) {
+    for (i = 1; i < size - 1; i++) {
+      for (j = 1; j < size - 1; j++) {
+        updateCell(u1, u2, i, j, adjstep, size);
+      }
+    }
+    swap(&u1, &u2);
+  }
 
   // Gib das Ergebnis aus
   printResult(u1, size, filename);
