@@ -66,7 +66,7 @@ void printResult(double *t, int size, char *filename) {
         r = 255 * ((val) / 5);
       } else if (val > 5 && val < 25.0) {
         r = 255 * 1.0;
-        g = 255 * (1.0 - (val - 25) / 20);
+        g = 255 * ((25 - val) / 20);
       } else {
         r = 255 * 1.0;
       }
