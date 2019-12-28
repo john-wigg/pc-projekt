@@ -164,7 +164,7 @@ int main(int argc, char **argv) {
 
   // Berechne Größe der Blöcke (werden als quadratisch angenommen).
   int bsize;
-  bsize = ceil(size / num_blocks_per_col) + 2 * g;
+  bsize = ceil((double)size / (double)num_blocks_per_col) + 2 * g;
 
   // Indizes der oberen linken Zelle.
   int imin, jmin;
@@ -205,7 +205,43 @@ int main(int argc, char **argv) {
     }
   }
 
-  // TODO: Blöcke einsammeln
+  // Blöcke einsammeln
+  double *recvbuf;
+  double *u;
+  if (rank == 0) {
+    recvbuf = (double *)malloc(num * bsize * bsize * sizeof(double));
+    u = (double *)malloc(size * size * sizeof(double));
+  }
+
+  MPI_Gather(u1, bsize * bsize, MPI_DOUBLE, recvbuf, bsize * bsize, MPI_DOUBLE,
+             0, MPI_COMM_WORLD);
+
+  // Sortiere das Empfangene Array.
+  // TODO: Da findet man sicherlich noch ne schönere Methode
+  if (rank == 0) {
+    int r;
+    for (r = 0; r < num; r++) {
+      int bi, bj;
+      bi = r / num_blocks_per_col;  // Zeilenindex.
+      bj = r % num_blocks_per_row;  // Spaltenindex.
+
+      // Indizes der oberen linken Zelle.
+      int imin, jmin;
+      imin = (bsize - 2 * g) * bi;
+      jmin = (bsize - 2 * g) * bj;
+
+      for (i = g; i < bsize - g; i++) {
+        if (imin + i - g > size - 1)
+          continue;  // Falls Blöcke über die Ränder hinausragen.
+        for (j = g; j < bsize - g; j++) {
+          if (jmin + j - g > size - 1) continue;
+          u[(imin + i - g) * size + (jmin + j - g)] =
+              recvbuf[r * bsize * bsize + i * bsize + j];
+        }
+      }
+    }
+    printResult(u, size, "out.ppm");
+  }
 
   // Gib das Ergebnis aus
   char bfname[256];
