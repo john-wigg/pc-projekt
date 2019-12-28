@@ -1,3 +1,4 @@
+#include <math.h>
 #include <mpi.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -15,6 +16,25 @@ void init(double *t, int size) {
       if (j == size - 1) t[j + i * size] = -25.0;
       if (i == 0) t[j + i * size] = 25.0;
       if (i == size - 1) t[j + i * size] = -25.0;
+    }
+  }
+}
+
+// Initialisiere einzelne Blöcke des Wärmefeldes mit Startwerten.
+// innen: 0.0
+// Rand:
+// links/oben warm=25.0
+// rechts/unten kalt=-25.0
+// Größe der Blöcke bsize sowie Indizes der oberen linken Zelle imin, jmin
+// werden benötigt.
+void initBlock(double *t, int size, int bsize, int imin, int jmin, int g) {
+  for (int i = g; i < bsize - g; i++) {
+    for (int j = g; j < bsize - g; j++) {
+      t[i * bsize + j] = 0.0;
+      if (jmin + j - g == 0) t[i * bsize + j] = 25.0;
+      if (jmin + j - g == size - 1) t[i * bsize + j] = -25.0;
+      if (imin + i - g == 0) t[i * bsize + j] = 25.0;
+      if (imin + i - g == size - 1) t[i * bsize + j] = -25.0;
     }
   }
 }
@@ -78,7 +98,18 @@ void printResult(double *t, int size, char *filename) {
 }
 
 int main(int argc, char **argv) {
-  MPI_Init(&argc, &argv);
+  // Initialisiere MPI
+  int res = MPI_Init(&argc, &argv);
+
+  if (res != MPI_SUCCESS) {
+    MPI_Abort(MPI_COMM_WORLD, res);
+  }
+
+  // Größe und Rang in World
+  int num, rank;
+  MPI_Comm_size(MPI_COMM_WORLD, &num);
+  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+
   // Größe des Feldes
   int size;
   // Anzahl Iterationen
@@ -88,8 +119,8 @@ int main(int argc, char **argv) {
   // Ausgabedatei
   char filename[256];
 
-  // TODO: beliebige alpha zulassen (wird aber eigentlich nur für das ermitteln
-  // der Zeit am Ende benötigt)
+  // TODO: beliebige alpha zulassen (wird aber eigentlich nur für das
+  // ermitteln der Zeit am Ende benötigt)
   // TODO: beliebige Seitenlängen a zulassen
   // TODO: beliebigen Sicherheitsfaktor für die Schrittweite zulassen
   double alpha = 1.0;
@@ -113,35 +144,73 @@ int main(int argc, char **argv) {
   // 2 Speicherbereiche für das Wärmefeld
   double *u1, *u2;
 
-  // Größe des Speicherbereiches
-  int mem = size * size * sizeof(double);
-  // Allokiere Speicher auf Host
-  u1 = (double *)malloc(mem);
-  u2 = (double *)malloc(mem);
-  // Initialisiere Speicher
-  init(u1, size);
-
   // TODO: Implementieren Sie ein paralleles Programm,
   //      das die Temperaturen u_k mit einer beliebigen
   //      Anzahl von p Prozessoren unter Verwendung von MPI berechnet.
   //      Der Austausch der Randbereiche soll alle g Schritte passieren.
 
+  // Anzahl von Blöcken per Zeile und Spalte
+  // TODO: Aktuell werden quadratische Blöcke zu Vereinfachung angenommen.
+  int num_blocks_per_row;
+  int num_blocks_per_col;
+
+  num_blocks_per_row = (int)sqrt(num);
+  num_blocks_per_col = num_blocks_per_row;
+
+  // Blockinindizes.
+  int bi, bj;
+  bi = rank / num_blocks_per_col;  // Zeilenindex.
+  bj = rank % num_blocks_per_row;  // Spaltenindex.
+
+  // Berechne Größe der Blöcke (werden als quadratisch angenommen).
+  int bsize;
+  bsize = ceil(size / num_blocks_per_col) + 2 * g;
+
+  // Indizes der oberen linken Zelle.
+  int imin, jmin;
+  imin = (bsize - 2 * g) * bi;
+  jmin = (bsize - 2 * g) * bj;
+
+  printf("-------------------------------\n");
+  printf("Block %d :: %d | %d :: %d | %d :: %d\n", rank, bi, bj, imin, jmin,
+         bsize);
+
+  int mem = bsize * bsize * sizeof(double);
+  u1 = (double *)malloc(mem);
+  u2 = (double *)malloc(mem);
+
+  initBlock(u1, size, bsize, imin, jmin, g);
+
   // Berechne Schwrittweite.
   double adjstep = adj * 0.25;
 
-  // Iteration.
-  int k, i, j;
-  for (k = 0; k < iter; k++) {
-    for (i = 1; i < size - 1; i++) {
-      for (j = 1; j < size - 1; j++) {
-        updateCell(u1, u2, i, j, adjstep, size);
+  // Iteration im Block.
+  // * Nach jedem Schritt wird der zu aktualisierende Block um 1 verkleinert.
+  // * TODO: Nach g Schritten müssen die Randbereiche ausgetauscht werden.
+  // * TODO: Die globalen Ränder dürfen nicht mit aktulaisiert werden.
+  int l, k, i, j;
+  for (l = 0; l < iter / g; l++) {
+    // TODO: Randbereiche austauschen.
+    for (k = 0; k < g; k++) {
+      for (i = 1; i < bsize - 1 - k; i++) {
+        for (j = 1; j < bsize - 1 - k; j++) {
+          // Randbereiche mit Dicke g sollen nicht mit aktualisiert werden.
+          if (imin + i - g == 0 || imin + i - g == size - 1 ||
+              jmin + j - g == 0 || jmin + j - g == size - 1)
+            continue;
+          updateCell(u1, u2, i, j, adjstep, bsize - k);
+        }
       }
+      swap(&u1, &u2);
     }
-    swap(&u1, &u2);
   }
 
+  // TODO: Blöcke einsammeln
+
   // Gib das Ergebnis aus
-  printResult(u1, size, filename);
+  char bfname[256];
+  sprintf(bfname, "out%d.ppm", rank);
+  printResult(u1, bsize, bfname);
 
   MPI_Finalize();
   return 0;
