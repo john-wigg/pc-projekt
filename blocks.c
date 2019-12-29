@@ -1,13 +1,14 @@
 #include "blocks.h"
 
-void initBlock(double *t, int size, int bsize, int imin, int jmin, int g) {
-  for (int i = g; i < bsize - g; i++) {
-    for (int j = g; j < bsize - g; j++) {
-      t[i * bsize + j] = 0.0;
-      if (jmin + j - g == 0) t[i * bsize + j] = 25.0;
-      if (jmin + j - g == size - 1) t[i * bsize + j] = -25.0;
-      if (imin + i - g == 0) t[i * bsize + j] = 25.0;
-      if (imin + i - g == size - 1) t[i * bsize + j] = -25.0;
+void initBlock(double *t, int size, int bheight, int bwidth, int imin, int jmin,
+               int g) {
+  for (int i = g; i < bheight - g; i++) {
+    for (int j = g; j < bwidth - g; j++) {
+      t[i * bwidth + j] = 0.0;
+      if (jmin + j - g == 0) t[i * bwidth + j] = 25.0;
+      if (jmin + j - g == size - 1) t[i * bwidth + j] = -25.0;
+      if (imin + i - g == 0) t[i * bwidth + j] = 25.0;
+      if (imin + i - g == size - 1) t[i * bwidth + j] = -25.0;
     }
   }
 }

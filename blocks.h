@@ -31,7 +31,8 @@ enum { T_SENDUP = 0, T_SENDDOWN = 1, T_SENDLEFT = 2, T_SENDRIGHT = 3 };
  * @param jmin Index j des oberen linken Punktes des Blocks.
  * @param g Überschneidungsbreite der Blöcke.
  */
-void initBlock(double *t, int size, int bsize, int imin, int jmin, int g);
+void initBlock(double *t, int size, int bheight, int bwidth, int imin, int jmin,
+               int g);
 
 /**
  * @brief Vertauscht die Pointer zweier Gitterblöcke.
