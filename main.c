@@ -10,68 +10,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "blocks.h"
 #include "io.h"
-
-#define T_LEFT 0
-#define T_TOP 1
-#define T_RIGHT 2
-#define T_BOTTOM 3
-
-// Initialisiere Wärmefeld mit Startwerten:
-// innen: 0.0
-// Rand:
-// links/oben warm=25.0
-// rechts/unten kalt=-25.0
-void init(double *t, int size) {
-  for (int i = 0; i < size; i++) {
-    for (int j = 0; j < size; j++) {
-      t[j + i * size] = 0.0;
-      if (j == 0) t[i * size] = 25.0;
-      if (j == size - 1) t[j + i * size] = -25.0;
-      if (i == 0) t[j + i * size] = 25.0;
-      if (i == size - 1) t[j + i * size] = -25.0;
-    }
-  }
-}
-
-// Initialisiere einzelne Blöcke des Wärmefeldes mit Startwerten.
-// innen: 0.0
-// Rand:
-// links/oben warm=25.0
-// rechts/unten kalt=-25.0
-// Größe der Blöcke bsize sowie Indizes der oberen linken Zelle imin, jmin
-// werden benötigt.
-void initBlock(double *t, int size, int bsize, int imin, int jmin, int g) {
-  for (int i = g; i < bsize - g; i++) {
-    for (int j = g; j < bsize - g; j++) {
-      t[i * bsize + j] = 0.0;
-      if (jmin + j - g == 0) t[i * bsize + j] = 25.0;
-      if (jmin + j - g == size - 1) t[i * bsize + j] = -25.0;
-      if (imin + i - g == 0) t[i * bsize + j] = 25.0;
-      if (imin + i - g == size - 1) t[i * bsize + j] = -25.0;
-    }
-  }
-}
-
-// Euler-Vorwärts für einen einzelnen Gitterpunkt.
-// adjstep ist die Schrittweite des Euler-Verfahrens.
-void updateCell(double *t1, double *t2, int i, int j, double adjstep,
-                int size) {
-  t2[i * size + j] =
-      t1[i * size + j] +
-      adjstep * (t1[(i + 1) * size + j] + t1[(i - 1) * size + j] +
-                 t1[i * size + (j + 1)] + t1[i * size + (j - 1)] -
-                 4 * t1[i * size + j]);
-}
-
-// Vertausche zwei double-Pointer.
-// Wird benutzt, um das aktualisierte und das alte Gitter auszutauschen.
-void swap(double **t1, double **t2) {
-  double *temp;
-  temp = *t2;
-  *t2 = *t1;
-  *t1 = temp;
-}
 
 int main(int argc, char **argv) {
   // Initialisiere MPI
@@ -119,11 +59,6 @@ int main(int argc, char **argv) {
 
   // 2 Speicherbereiche für das Wärmefeld
   double *u1, *u2;
-
-  // TODO: Implementieren Sie ein paralleles Programm,
-  //      das die Temperaturen u_k mit einer beliebigen
-  //      Anzahl von p Prozessoren unter Verwendung von MPI berechnet.
-  //      Der Austausch der Randbereiche soll alle g Schritte passieren.
 
   // Anzahl von Blöcken per Zeile und Spalte
   // TODO: Aktuell werden quadratische Blöcke zu Vereinfachung angenommen.
@@ -176,16 +111,16 @@ int main(int argc, char **argv) {
     int n_bot = (bi + 1) * num_blocks_per_row + bj;
     if (bi > 0) {
       // Oberen Rand nach oben senden und unteren Rand von Oben empfangen
-      MPI_Isend(u1 + g * bsize, g * bsize, MPI_DOUBLE, n_top, T_TOP,
+      MPI_Isend(u1 + g * bsize, g * bsize, MPI_DOUBLE, n_top, T_SENDUP,
                 MPI_COMM_WORLD, &req);
-      MPI_Recv(u1, g * bsize, MPI_DOUBLE, n_top, T_BOTTOM, MPI_COMM_WORLD,
+      MPI_Recv(u1, g * bsize, MPI_DOUBLE, n_top, T_SENDDOWN, MPI_COMM_WORLD,
                &stat);
     }
     if (bi < num_blocks_per_col - 1) {
       // Unteren Rand nach unten senden und oberen Rand von unten empfangen
       MPI_Isend(u1 + bsize * (bsize - 2 * g), g * bsize, MPI_DOUBLE, n_bot,
-                T_BOTTOM, MPI_COMM_WORLD, &req);
-      MPI_Recv(u1 + bsize * (bsize - g), g * bsize, MPI_DOUBLE, n_bot, T_TOP,
+                T_SENDDOWN, MPI_COMM_WORLD, &req);
+      MPI_Recv(u1 + bsize * (bsize - g), g * bsize, MPI_DOUBLE, n_bot, T_SENDUP,
                MPI_COMM_WORLD, &stat);
     }
 
@@ -197,9 +132,9 @@ int main(int argc, char **argv) {
           buf[m * g + n] = u1[m * bsize + g + n];
         }
       }
-      MPI_Isend(buf, g * bsize, MPI_DOUBLE, n_left, T_LEFT, MPI_COMM_WORLD,
+      MPI_Isend(buf, g * bsize, MPI_DOUBLE, n_left, T_SENDLEFT, MPI_COMM_WORLD,
                 &req);
-      MPI_Recv(buf, g * bsize, MPI_DOUBLE, n_left, T_RIGHT, MPI_COMM_WORLD,
+      MPI_Recv(buf, g * bsize, MPI_DOUBLE, n_left, T_SENDRIGHT, MPI_COMM_WORLD,
                &stat);
       for (m = 0; m < bsize; m++) {
         for (n = 0; n < g; n++) {
@@ -216,9 +151,9 @@ int main(int argc, char **argv) {
           buf[m * g + n] = u1[m * bsize + bsize - 2 * g + n];
         }
       }
-      MPI_Isend(buf, g * bsize, MPI_DOUBLE, n_right, T_RIGHT, MPI_COMM_WORLD,
-                &req);
-      MPI_Recv(buf, g * bsize, MPI_DOUBLE, n_right, T_LEFT, MPI_COMM_WORLD,
+      MPI_Isend(buf, g * bsize, MPI_DOUBLE, n_right, T_SENDRIGHT,
+                MPI_COMM_WORLD, &req);
+      MPI_Recv(buf, g * bsize, MPI_DOUBLE, n_right, T_SENDLEFT, MPI_COMM_WORLD,
                &stat);
 
       for (m = 0; m < bsize; m++) {
@@ -235,7 +170,7 @@ int main(int argc, char **argv) {
           if (imin + i - g == 0 || imin + i - g >= size - 1 ||
               jmin + j - g == 0 || jmin + j - g >= size - 1)
             continue;
-          updateCell(u1, u2, i, j, adjstep, bsize);
+          updatePoint(u1, u2, i, j, adjstep, bsize);
         }
       }
       swap(&u1, &u2);
