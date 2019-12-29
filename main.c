@@ -1,7 +1,16 @@
+/**
+ * @file main.c
+ * @author Wigg
+ * @date 29 December 2019
+ * @brief Main-Datei des Projektes.
+ */
+
 #include <math.h>
 #include <mpi.h>
 #include <stdio.h>
 #include <stdlib.h>
+
+#include "io.h"
 
 #define T_LEFT 0
 #define T_TOP 1
@@ -62,44 +71,6 @@ void swap(double **t1, double **t2) {
   temp = *t2;
   *t2 = *t1;
   *t1 = temp;
-}
-
-// Ausgabe des Feldes t als PPM (Portable Pix Map) in filename
-// mit schönen Farben
-void printResult(double *t, int size, char *filename) {
-  FILE *f = fopen(filename, "w");
-  fprintf(f, "P3\n%i %i\n255\n", size, size);
-  double tmax = 25.0;
-  double tmin = -tmax;
-  double r, g, b;
-  for (int i = 0; i < size; i++) {
-    for (int j = 0; j < size; j++) {
-      double val = t[j + i * size];
-      r = 0;
-      g = 0;
-      b = 0;
-      if (val <= tmin) {
-        b = 1.0 * 255.0;
-      } else if (val >= -25.0 && val < -5) {
-        b = 255 * 1.0;
-        g = 255 * ((val + 25) / 20);
-      } else if (val >= -5 && val <= 0.0) {
-        g = 255 * 1.0;
-        b = 255 * (1.0 - (val + 5) / 5);
-      } else if (val > 0.0 && val <= 5) {
-        g = 255 * 1.0;
-        r = 255 * ((val) / 5);
-      } else if (val > 5 && val < 25.0) {
-        r = 255 * 1.0;
-        g = 255 * ((25 - val) / 20);
-      } else {
-        r = 255 * 1.0;
-      }
-      fprintf(f, "%i\n%i\n%i\n", (int)r, (int)g, (int)b);
-    }
-    //      fprintf(f,"\n");
-  }
-  fclose(f);
 }
 
 int main(int argc, char **argv) {
@@ -176,7 +147,6 @@ int main(int argc, char **argv) {
   imin = (bsize - 2 * g) * bi;
   jmin = (bsize - 2 * g) * bj;
 
-  printf("-------------------------------\n");
   printf("Block %d :: %d | %d :: %d | %d :: %d\n", rank, bi, bj, imin, jmin,
          bsize);
 
@@ -271,6 +241,8 @@ int main(int argc, char **argv) {
       swap(&u1, &u2);
     }
   }
+
+  free(buf);
 
   // Blöcke einsammeln
   double *recvbuf;
