@@ -228,7 +228,7 @@ int main(int argc, char **argv) {
         }
       }
     }
-    printResult(u, size, "out.ppm");
+    printPPMP6(u, size, "out.ppm");
   }
 
   free(u1);

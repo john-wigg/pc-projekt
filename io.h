@@ -17,6 +17,8 @@
  * @param size Seitenlänge des Gitters.
  * @param filename Dateiname der PPM.
  */
-void printResult(double *t, int size, char *filename);
+void printPPMP3(double *t, int size, char *filename);
+
+void printPPMP6(double *t, int size, char *filename);
 
 #endif  // IO_H_
