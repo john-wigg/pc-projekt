@@ -110,9 +110,9 @@ int main(int argc, char **argv) {
 
   // Iteration im Block.
   // * Nach jedem Schritt wird der zu aktualisierende Block um 1 verkleinert.
-  // * TODO: Nach g Schritten müssen die Randbereiche ausgetauscht werden.
+  // * Nach g Schritten müssen die Randbereiche ausgetauscht werden.
   // * Die globalen Ränder dürfen nicht mit aktulaisiert werden.
-  MPI_Request req;
+  MPI_Request req[4];
   MPI_Status stat;
   double *buf;
   buf = (double *)malloc(g * bheight * sizeof(double));
@@ -126,16 +126,18 @@ int main(int argc, char **argv) {
     if (bi > 0) {
       // Oberen Rand nach oben senden und unteren Rand von Oben empfangen
       MPI_Isend(u1 + g * bwidth, g * bwidth, MPI_DOUBLE, n_top, T_SENDUP,
-                MPI_COMM_WORLD, &req);
+                MPI_COMM_WORLD, &req[T_SENDUP]);
       MPI_Recv(u1, g * bwidth, MPI_DOUBLE, n_top, T_SENDDOWN, MPI_COMM_WORLD,
                &stat);
+      MPI_Wait(&req[T_SENDUP], &stat);
     }
     if (bi < num_blocks_per_col - 1) {
       // Unteren Rand nach unten senden und oberen Rand von unten empfangen
       MPI_Isend(u1 + bwidth * (bheight - 2 * g), g * bwidth, MPI_DOUBLE, n_bot,
-                T_SENDDOWN, MPI_COMM_WORLD, &req);
+                T_SENDDOWN, MPI_COMM_WORLD, &req[T_SENDDOWN]);
       MPI_Recv(u1 + bwidth * (bheight - g), g * bwidth, MPI_DOUBLE, n_bot,
                T_SENDUP, MPI_COMM_WORLD, &stat);
+      MPI_Wait(&req[T_SENDDOWN], &stat);
     }
 
     if (bj > 0) {
@@ -147,7 +149,7 @@ int main(int argc, char **argv) {
         }
       }
       MPI_Isend(buf, g * bheight, MPI_DOUBLE, n_left, T_SENDLEFT,
-                MPI_COMM_WORLD, &req);
+                MPI_COMM_WORLD, &req[T_SENDLEFT]);
       MPI_Recv(buf, g * bheight, MPI_DOUBLE, n_left, T_SENDRIGHT,
                MPI_COMM_WORLD, &stat);
       for (m = 0; m < bheight; m++) {
@@ -155,6 +157,7 @@ int main(int argc, char **argv) {
           u1[m * bwidth + n] = buf[m * g + n];
         }
       }
+      MPI_Wait(&req[T_SENDLEFT], &stat);
     }
 
     if (bj < num_blocks_per_row - 1) {
@@ -166,9 +169,10 @@ int main(int argc, char **argv) {
         }
       }
       MPI_Isend(buf, g * bheight, MPI_DOUBLE, n_right, T_SENDRIGHT,
-                MPI_COMM_WORLD, &req);
+                MPI_COMM_WORLD, &req[T_SENDRIGHT]);
       MPI_Recv(buf, g * bheight, MPI_DOUBLE, n_right, T_SENDLEFT,
                MPI_COMM_WORLD, &stat);
+      MPI_Wait(&req[T_SENDRIGHT], &stat);
 
       for (m = 0; m < bheight; m++) {
         for (n = 0; n < g; n++) {

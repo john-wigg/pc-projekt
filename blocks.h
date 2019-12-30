@@ -15,7 +15,7 @@
  * zum Beispiel ein Block ihren Überschneidungsbereich an den Block links von
  * ihm, so wird der Tag \p T_SENDLEFT verwendet.
  */
-enum { T_SENDUP = 0, T_SENDDOWN = 1, T_SENDLEFT = 2, T_SENDRIGHT = 3 };
+enum { T_SENDUP, T_SENDDOWN, T_SENDLEFT, T_SENDRIGHT };
 
 /**
  * @brief Initialisiert einen Gitterblock mit Randbedingungen.
