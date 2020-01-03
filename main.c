@@ -95,13 +95,11 @@ int main(int argc, char **argv) {
   u1 = (double *)malloc(mem);
   u2 = (double *)malloc(mem);
 
-  int *idi, *idj;
-  double *initt;
-  readGraymap(&idi, &idj, &initt, size, bheight, bwidth, imin, jmin, g,
-              "../scribbles.ppm");
+  Conditions initcond;
+  readGraymap(&initcond, size, bheight, bwidth, imin, jmin, g, "../smile.ppm");
+  initCustom(u1, size, bheight, bwidth, imin, jmin, g, initcond);
 
-  initBlock(u1, size, bheight, bwidth, imin, jmin, g);
-  // initCustom(u1, size, bheight, bwidth, imin, jmin, g, idi, idj, initt);
+  // initBlock(u1, size, bheight, bwidth, imin, jmin, g);
   // hotSpot(u1, size, bheight, bwidth, imin, jmin, g);
 
   // Berechne Schwrittweite.

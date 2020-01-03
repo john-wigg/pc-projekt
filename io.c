@@ -76,8 +76,8 @@ void printPPMP6(double *t, int size, char *filename) {
   fclose(f);
 }
 
-void readGraymap(int **idi, int **idj, double **t, int size, int bheight,
-                 int bwidth, int imin, int jmin, int g, char *filename) {
+void readGraymap(Conditions *cond, int size, int bheight, int bwidth, int imin,
+                 int jmin, int g, char *filename) {
   FILE *f = fopen(filename, "r");
   if (!f) {
     printf("Could not open input file!\n");
@@ -103,9 +103,9 @@ void readGraymap(int **idi, int **idj, double **t, int size, int bheight,
   // Reserviere die maximal nötige Speichermenge
   // TODO: Weniger Speicher reservieren, wenn weniger gebraucht wird
   int mem = (bwidth - 2 * g) * (bheight - 2 * g);
-  *idi = (int *)malloc(mem * sizeof(int));
-  *idj = (int *)malloc(mem * sizeof(int));
-  *t = (double *)malloc(mem * sizeof(double));
+  cond->idi = (int *)malloc(mem * sizeof(int));
+  cond->idj = (int *)malloc(mem * sizeof(int));
+  cond->t = (double *)malloc(mem * sizeof(double));
 
   // TODO: Was, wenn das Bild größer ist als das Gitter?
   int spacing = size / iwidth;
@@ -122,9 +122,9 @@ void readGraymap(int **idi, int **idj, double **t, int size, int bheight,
           if (val != 0) {
             for (int il = 0; il < spacing; il++) {
               for (int jl = 0; jl < spacing; jl++) {
-                (*idi)[k] = i * spacing + il - imin;
-                (*idj)[k] = j * spacing + jl - jmin;
-                (*t)[k] = (double)val;
+                cond->idi[k] = i * spacing + il - imin;
+                cond->idj[k] = j * spacing + jl - jmin;
+                cond->t[k] = (double)val;
                 k++;
               }
             }
