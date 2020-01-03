@@ -12,6 +12,7 @@
 
 #include "blocks.h"
 #include "io.h"
+#include "scenarios.h"
 
 int main(int argc, char **argv) {
   // Initialisiere MPI
@@ -90,16 +91,18 @@ int main(int argc, char **argv) {
   imin = (bheight - 2 * g) * bi;
   jmin = (bwidth - 2 * g) * bj;
 
-  /*
-    printf("Block %d :: %d | %d :: %d | %d :: %d\n", rank, bi, bj, imin, jmin,
-           bsize);
-           */
-
   int mem = bheight * bwidth * sizeof(double);
   u1 = (double *)malloc(mem);
   u2 = (double *)malloc(mem);
 
+  int *idi, *idj;
+  double *initt;
+  readGraymap(&idi, &idj, &initt, size, bheight, bwidth, imin, jmin, g,
+              "../scribbles.ppm");
+
   initBlock(u1, size, bheight, bwidth, imin, jmin, g);
+  // initCustom(u1, size, bheight, bwidth, imin, jmin, g, idi, idj, initt);
+  // hotSpot(u1, size, bheight, bwidth, imin, jmin, g);
 
   // Berechne Schwrittweite.
   double adjstep = adj * 0.25;
