@@ -44,15 +44,11 @@ int main(int argc, char **argv) {
   double adj = 1.0;
 
   // Übergabeparameter für [size iter g filename] einlesen
-  if (argc != 5) {
-    printf("Nutzung: %s <size> <iter> <g> <filename>\n", argv[0]);
-    MPI_Finalize();
-    return -1;
-  }
-
-  if (!sscanf(argv[1], "%d", &size) || !sscanf(argv[2], "%d", &iter) ||
-      !sscanf(argv[3], "%d", &g) || !sscanf(argv[4], "%s", filename)) {
-    printf("Nutzung: %s <size> <iter> <g> <filename>\n", argv[0]);
+  if (argc != 5 || !sscanf(argv[1], "%d", &size) ||
+      !sscanf(argv[2], "%d", &iter) || !sscanf(argv[3], "%d", &g) ||
+      !sscanf(argv[4], "%s", filename)) {
+    if (rank == 0)
+      printf("Nutzung: %s <size> <iter> <g> <filename>\n", argv[0]);
     MPI_Finalize();
     return -1;
   }
