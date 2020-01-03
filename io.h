@@ -9,9 +9,9 @@
 #define IO_H_
 
 /**
- * @brief Ausgabe des Gitters als Portable Pix Map (PPM).
+ * @brief Ausgabe des Gitters als ASCII-kodierte Portable Pix Map (PPM).
  *
- * Schreibt das Gitter t als PPM in die Datei filename.
+ * Schreibt das Gitter t als ASCII-kodierte PPM in die Datei filename.
  *
  * @param t Gitter.
  * @param size Seitenlänge des Gitters.
@@ -19,6 +19,15 @@
  */
 void printPPMP3(double *t, int size, char *filename);
 
+/**
+ * @brief Ausgabe des Gitters als binärkodierte Portable Pix Map (PPM).
+ *
+ * Schreibt das Gitter t als binärkodierte PPM in die Datei filename.
+ *
+ * @param t Gitter.
+ * @param size Seitenlänge des Gitters.
+ * @param filename Dateiname der PPM.
+ */
 void printPPMP6(double *t, int size, char *filename);
 
 #endif  // IO_H_
