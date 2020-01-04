@@ -45,7 +45,7 @@ void initFromImage(double *t, int size, int bheight, int bwidth, int imin,
                    int jmin, int g, char *filename) {
   FILE *f = fopen(filename, "r");
   if (!f) {
-    printf("Could not open input file!\n");
+    printf("Datei konnte nicht geöffnet werden!\n");
     exit(-1);
   }
   char magic[256];
@@ -53,7 +53,7 @@ void initFromImage(double *t, int size, int bheight, int bwidth, int imin,
   fscanf(f, "%s\n", magic);
   if (strcmp(magic, "P6") != 0) {
     printf(
-        "Nur binärkodieret graustufige PPM-Dateien sind als Input zulässig! "
+        "Nur binärkodierte PPM-Dateien sind als Input zulässig! "
         "%s\n",
         magic);
     exit(-1);
@@ -65,7 +65,6 @@ void initFromImage(double *t, int size, int bheight, int bwidth, int imin,
   int maxval;
   fscanf(f, "%d\n", &maxval);
 
-  // TODO: Was, wenn das Bild größer ist als das Gitter?
   int spacing = size / iwidth;
   int i, j;
   int val = 0;
