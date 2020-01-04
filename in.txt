@@ -4,4 +4,4 @@
 1.0
 1.0
 1.0
-../smile.ppm
+../mario.ppm

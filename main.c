@@ -129,9 +129,6 @@ int main(int argc, char **argv)
   double adjstep = alpha * adj * 0.25;
 
   // Iteration im Block.
-  // * Nach jedem Schritt wird der zu aktualisierende Block um 1 verkleinert.
-  // * Nach g Schritten müssen die Randbereiche ausgetauscht werden.
-  // * Die globalen Ränder dürfen nicht mit aktulaisiert werden.
   MPI_Request req[4];
   MPI_Status stat;
   double *buf;
@@ -144,6 +141,7 @@ int main(int argc, char **argv)
   for (l = 0; l < iter / g; l++)
   {
     double t1comm = MPI_Wtime();
+    // Austauschen der Randbereiche.
     int n_left = bi * num_blocks_per_row + bj - 1;
     int n_right = bi * num_blocks_per_row + bj + 1;
     int n_top = (bi - 1) * num_blocks_per_row + bj;
@@ -224,11 +222,13 @@ int main(int argc, char **argv)
 
     for (k = 0; k < g; k++)
     {
+      // Der zu aktualisierende Bereich schrumpft nach jedem Zeitschritt um 1.
       for (i = 1 + k; i < bheight - 1 - k; i++)
       {
         for (j = 1 + k; j < bwidth - 1 - k; j++)
         {
           // Randbereiche mit Dicke g sollen nicht mit aktualisiert werden.
+          // TODO: if-Abfragen entfernen
           if (imin + i - g <= 0 || imin + i - g >= size - 1 ||
               jmin + j - g <= 0 || jmin + j - g >= size - 1)
             continue;
