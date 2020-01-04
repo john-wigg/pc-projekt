@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-void printPPMP3(double *t, int size, char *filename) {
+void printPPMP3(double *t, int size, const char *filename) {
   FILE *f = fopen(filename, "w");
   fprintf(f, "P3\n%i %i\n255\n", size, size);
   double tmax = 25.0;
@@ -40,7 +40,7 @@ void printPPMP3(double *t, int size, char *filename) {
   fclose(f);
 }
 
-void printPPMP6(double *t, int size, char *filename) {
+void printPPMP6(double *t, int size, const char *filename) {
   FILE *f = fopen(filename, "w");
   fprintf(f, "P6\n%i %i\n255\n", size, size);
   double tmax = 25.0;
@@ -73,5 +73,20 @@ void printPPMP6(double *t, int size, char *filename) {
     }
     //      fprintf(f,"\n");
   }
+  fclose(f);
+}
+
+void readInputFile(int *size, int *iter, int *g, double *adj, double *alpha,
+                   double *a, char *scenario, const char *filename) {
+  FILE *f = fopen(filename, "r");
+
+  fscanf(f, "%d\n", size);
+  fscanf(f, "%d\n", iter);
+  fscanf(f, "%d\n", g);
+  fscanf(f, "%lf\n", adj);
+  fscanf(f, "%lf\n", alpha);
+  fscanf(f, "%lf\n", a);
+  fscanf(f, "%s\n", scenario);
+
   fclose(f);
 }

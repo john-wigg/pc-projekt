@@ -9,6 +9,7 @@
 #include <mpi.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "blocks.h"
 #include "io.h"
@@ -34,25 +35,30 @@ int main(int argc, char **argv) {
   // Geisterzonenbreite
   int g;
   // Ausgabedatei
-  char filename[256];
+  char filename[64];
+  char ifilename[64];
+  char scenario[64];
 
   // TODO: beliebige alpha zulassen (wird aber eigentlich nur für das
   // ermitteln der Zeit am Ende benötigt)
   // TODO: beliebige Seitenlängen a zulassen
   // TODO: beliebigen Sicherheitsfaktor für die Schrittweite zulassen
-  double alpha = 1.0;
-  double a = 1.0;
-  double adj = 1.0;
+  double alpha;
+  double adj;
+  double a;  // Seitenlänge.
 
   // Übergabeparameter für [size iter g filename] einlesen
-  if (argc != 5 || !sscanf(argv[1], "%d", &size) ||
-      !sscanf(argv[2], "%d", &iter) || !sscanf(argv[3], "%d", &g) ||
-      !sscanf(argv[4], "%s", filename)) {
-    if (rank == 0)
-      printf("Nutzung: %s <size> <iter> <g> <filename>\n", argv[0]);
+  if (argc != 3 || !sscanf(argv[1], "%s", ifilename) ||
+      !sscanf(argv[2], "%s", filename)) {
+    if (rank == 0) printf("Nutzung: %s <ifile> <ofile>\n", argv[0]);
     MPI_Finalize();
     return -1;
   }
+  readInputFile(&size, &iter, &g, &adj, &alpha, &a, scenario, ifilename);
+
+  double h = a / size;
+  double t = 0.0;
+  double dt = adj * h * h / 4.0 / alpha;
 
   // 2 Speicherbereiche für das Wärmefeld
   double *u1, *u2;
@@ -95,13 +101,19 @@ int main(int argc, char **argv) {
   u1 = (double *)malloc(mem);
   u2 = (double *)malloc(mem);
 
-  initFromImage(u1, size, bheight, bwidth, imin, jmin, g, "../smile.ppm");
-
-  // initBlock(u1, size, bheight, bwidth, imin, jmin, g);
-  // hotSpot(u1, size, bheight, bwidth, imin, jmin, g);
+  // Initialisiere das Gitter je nach gewähltem Szenario.
+  if (strcmp(scenario, "TOPLEFTHOTBOTRIGHTCOLD") == 0) {
+    initTopLeftHotBotRightCold(u1, size, bheight, bwidth, imin, jmin, g);
+  } else if (strcmp(scenario, "HOTSPOT") == 0) {
+    initHotSpot(u1, size, bheight, bwidth, imin, jmin, g);
+  } else if (strcmp(scenario, "RIGHTHOT") == 0) {
+    initRightHot(u1, size, bheight, bwidth, imin, jmin, g);
+  } else {
+    initFromImage(u1, size, bheight, bwidth, imin, jmin, g, scenario);
+  }
 
   // Berechne Schwrittweite.
-  double adjstep = adj * 0.25;
+  double adjstep = alpha * adj * 0.25;
 
   // Iteration im Block.
   // * Nach jedem Schritt wird der zu aktualisierende Block um 1 verkleinert.
@@ -188,6 +200,7 @@ int main(int argc, char **argv) {
       }
       swap(&u1, &u2);
     }
+    t += dt;
   }
 
   free(buf);
@@ -228,6 +241,7 @@ int main(int argc, char **argv) {
       }
     }
     printPPMP6(u, size, "out.ppm");
+    printf("%f %f %e %f\n", a, h, dt, t);
   }
 
   free(u1);

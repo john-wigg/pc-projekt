@@ -17,7 +17,7 @@
  * @param size Seitenlänge des Gitters.
  * @param filename Dateiname der PPM.
  */
-void printPPMP3(double *t, int size, char *filename);
+void printPPMP3(double *t, int size, const char *filename);
 
 /**
  * @brief Ausgabe des Gitters als binärkodierte Portable Pix Map (PPM).
@@ -28,6 +28,9 @@ void printPPMP3(double *t, int size, char *filename);
  * @param size Seitenlänge des Gitters.
  * @param filename Dateiname der PPM.
  */
-void printPPMP6(double *t, int size, char *filename);
+void printPPMP6(double *t, int size, const char *filename);
+
+void readInputFile(int *size, int *iter, int *g, double *adj, double *alpha,
+                   double *a, char *scenario, const char *filename);
 
 #endif  // IO_H_

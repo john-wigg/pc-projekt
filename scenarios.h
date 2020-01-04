@@ -41,6 +41,7 @@ void initRightHot(double *t, int size, int bheight, int bwidth, int imin,
  * @brief Initialisiert einen Gitterblock mti den Pixelwerten aus einer
  * binärkodierten PPM-Datei.
  *
+ * Nur der blaue Farbkanal wird gelesen.
  * Siehe initTopLeftHotBotRightCold() für Parameterliste.
  *
  * @param filename Dateiname.
