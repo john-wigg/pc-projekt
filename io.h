@@ -8,8 +8,6 @@
 #ifndef IO_H_
 #define IO_H_
 
-#include "scenarios.h"
-
 /**
  * @brief Ausgabe des Gitters als ASCII-kodierte Portable Pix Map (PPM).
  *
@@ -31,8 +29,5 @@ void printPPMP3(double *t, int size, char *filename);
  * @param filename Dateiname der PPM.
  */
 void printPPMP6(double *t, int size, char *filename);
-
-void readGraymap(Conditions *cond, int size, int bheight, int bwidth, int imin,
-                 int jmin, int g, char *filename);
 
 #endif  // IO_H_

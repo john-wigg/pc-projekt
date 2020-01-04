@@ -18,23 +18,6 @@
 enum { T_SENDUP, T_SENDDOWN, T_SENDLEFT, T_SENDRIGHT };
 
 /**
- * @brief Initialisiert einen Gitterblock mit Randbedingungen.
- *
- * Initialisiert den Gitterblock mit 0.0 für alle inneren Punkte, mit 25.0 am
- * oberen und am linken Rand und mit -25.0 am unteren und am rechten Rand des
- * Gesamtgitters.
- *
- * @param t Gitterblock.
- * @param size Seitenlänge des Gesamtgitters.
- * @param bsize Seitenlänge der Gitterblocks.
- * @param imin Index i des oberen linken Punktes des Blocks.
- * @param jmin Index j des oberen linken Punktes des Blocks.
- * @param g Überschneidungsbreite der Blöcke.
- */
-void initBlock(double *t, int size, int bheight, int bwidth, int imin, int jmin,
-               int g);
-
-/**
  * @brief Vertauscht die Pointer zweier Gitterblöcke.
  *
  * @param t1 Pointer zum ersten Gitterblock.

@@ -95,9 +95,7 @@ int main(int argc, char **argv) {
   u1 = (double *)malloc(mem);
   u2 = (double *)malloc(mem);
 
-  Conditions initcond;
-  readGraymap(&initcond, size, bheight, bwidth, imin, jmin, g, "../smile.ppm");
-  initCustom(u1, size, bheight, bwidth, imin, jmin, g, initcond);
+  initFromImage(u1, size, bheight, bwidth, imin, jmin, g, "../smile.ppm");
 
   // initBlock(u1, size, bheight, bwidth, imin, jmin, g);
   // hotSpot(u1, size, bheight, bwidth, imin, jmin, g);
