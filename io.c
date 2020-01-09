@@ -77,7 +77,7 @@ void printPPMP6(double *t, int size, const char *filename) {
 }
 
 void readInputFile(int *size, int *iter, int *g, double *adj, double *alpha,
-                   double *a, char *scenario, const char *filename) {
+                   double *a, int *scenario, const char *filename) {
   FILE *f = fopen(filename, "r");
 
   fscanf(f, "%d\n", size);
@@ -86,7 +86,7 @@ void readInputFile(int *size, int *iter, int *g, double *adj, double *alpha,
   fscanf(f, "%lf\n", adj);
   fscanf(f, "%lf\n", alpha);
   fscanf(f, "%lf\n", a);
-  fscanf(f, "%s\n", scenario);
+  fscanf(f, "%d\n", scenario);
 
   fclose(f);
 }

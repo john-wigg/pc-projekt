@@ -32,17 +32,19 @@ void printPPMP6(double *t, int size, const char *filename);
 
 /**
  * @brief Liest die Parameter für die Simulation aus einer Datei ein.
- * 
+ *
  * @param size Anzahl Gitterpunkte in eine Richtung.
  * @param iter Anzahl Iterationen.
  * @param g Breite der Überschneidungsbereiche.
- * @param adj Sicherheitsfaktor des Zeitschrittes (<1.0 für stabiles Euler-Verfahren)
+ * @param adj Sicherheitsfaktor des Zeitschrittes (<1.0 für stabiles
+ * Euler-Verfahren)
  * @param alpha Thermische Diffusivität.
  * @param a Seitenlänge des Gitters.
- * @param scenario Simulationsszenario. Mögliche Werte: TOPLEFTHOTBOTRIGHTCOLD, RIGHTHOT, HOTSPOT, oder Dateiname um eine PPM-Datei einzulesen.
+ * @param scenario Simulationsszenario. Mögliche Werte: TOPLEFTHOTBOTRIGHTCOLD,
+ * RIGHTHOT, HOTSPOT, oder Dateiname um eine PPM-Datei einzulesen.
  * @param filename Dateiname der Inputdatei.
  */
 void readInputFile(int *size, int *iter, int *g, double *adj, double *alpha,
-                   double *a, char *scenario, const char *filename);
+                   double *a, int *scenario, const char *filename);
 
-#endif // IO_H_
+#endif  // IO_H_
