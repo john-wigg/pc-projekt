@@ -29,6 +29,26 @@ typedef struct config_s {
   int scenario;  //<! Gewähltes Szeneria, d.h. Anfangs- und Randbedingungen
 } t_config;
 
+static inline void writeSendBuf(double *sendbuf, double *sourcebuf, int bwidth,
+                                int bufw, int bufh, int ioff, int joff) {
+  int m, n;
+  for (m = 0; m < bufh; m++) {
+    for (n = 0; n < bufw; n++) {
+      sendbuf[m * bufw + n] = sourcebuf[(m + ioff) * bwidth + n + joff];
+    }
+  }
+}
+
+static inline void readRecvBuf(double *recvbuf, double *targetbuf, int bwidth,
+                               int bufw, int bufh, int ioff, int joff) {
+  int m, n;
+  for (m = 0; m < bufh; m++) {
+    for (n = 0; n < bufw; n++) {
+      targetbuf[(m + ioff) * bwidth + n + joff] = recvbuf[m * bufw + n];
+    }
+  }
+}
+
 int main(int argc, char **argv) {
   // Initialisiere MPI
   int res = MPI_Init(&argc, &argv);
@@ -227,159 +247,88 @@ int main(int argc, char **argv) {
 
     // Oberen Rand nach oben senden und unteren Rand von Oben empfangen
     if (bi > 0) {
-      int m, n;
-      for (m = 0; m < g; m++) {
-        for (n = g; n < bwidth - g; n++) {
-          sendbuf[T_SEND_N][m * (bwidth - 2 * g) + n - g] =
-              u1[(m + g) * bwidth + n];
-        }
-      }
+      writeSendBuf(sendbuf[T_SEND_N], u1, bwidth, bwidth - 2 * g, g, g, g);
       MPI_Isend(sendbuf[T_SEND_N], g * (bwidth - 2 * g), MPI_DOUBLE, n_n,
                 T_SEND_N, MPI_COMM_WORLD, &req);
       MPI_Irecv(recvbuf[T_SEND_N], g * (bwidth - 2 * g), MPI_DOUBLE, n_n,
                 T_SEND_S, MPI_COMM_WORLD, &req_recv[T_SEND_N]);
-      for (m = 0; m < g; m++) {
-        for (n = g; n < bwidth - g; n++) {
-          u1[m * bwidth + n] = recvbuf[T_SEND_N][m * (bwidth - 2 * g) + n - g];
-        }
-      }
+      readRecvBuf(recvbuf[T_SEND_N], u1, bwidth, bwidth - 2 * g, g, 0, g);
 
       // Nordwestliche Ecke.
       if (bj > 0) {
-        for (m = 0; m < g; m++) {
-          for (n = 0; n < g; n++) {
-            sendbuf[T_SEND_NW][m * g + n] = u1[(m + g) * bwidth + n + g];
-          }
-        }
+        writeSendBuf(sendbuf[T_SEND_NW], u1, bwidth, g, g, g, g);
         MPI_Isend(sendbuf[T_SEND_NW], g * g, MPI_DOUBLE, n_nw, T_SEND_NW,
                   MPI_COMM_WORLD, &req);
         MPI_Irecv(recvbuf[T_SEND_NW], g * g, MPI_DOUBLE, n_nw, T_SEND_SE,
                   MPI_COMM_WORLD, &req_recv[T_SEND_NW]);
-        for (m = 0; m < g; m++) {
-          for (n = 0; n < g; n++) {
-            u1[m * bwidth + n] = recvbuf[T_SEND_NW][m * g + n];
-          }
-        }
+        readRecvBuf(recvbuf[T_SEND_NW], u1, bwidth, g, g, 0, 0);
       }
 
       // Nordöstliche Ecke.
       if (bj < num_blocks_per_row - 1) {
-        for (m = 0; m < g; m++) {
-          for (n = 0; n < g; n++) {
-            sendbuf[T_SEND_NE][m * g + n] =
-                u1[(m + g) * bwidth + n + bwidth - 2 * g];
-          }
-        }
+        writeSendBuf(sendbuf[T_SEND_NE], u1, bwidth, g, g, g, bwidth - 2 * g);
         MPI_Isend(sendbuf[T_SEND_NE], g * g, MPI_DOUBLE, n_ne, T_SEND_NE,
                   MPI_COMM_WORLD, &req);
         MPI_Irecv(recvbuf[T_SEND_NE], g * g, MPI_DOUBLE, n_ne, T_SEND_SW,
                   MPI_COMM_WORLD, &req_recv[T_SEND_NE]);
-        for (m = 0; m < g; m++) {
-          for (n = 0; n < g; n++) {
-            u1[m * bwidth + n + bwidth - g] = recvbuf[T_SEND_NE][m * g + n];
-          }
-        }
+        readRecvBuf(recvbuf[T_SEND_NE], u1, bwidth, g, g, 0, bwidth - g);
       }
     }
 
     // Unteren Rand nach unten senden und oberen Rand von unten empfangen
     if (bi < num_blocks_per_col - 1) {
-      int m, n;
-      for (m = 0; m < g; m++) {
-        for (n = g; n < bwidth - g; n++) {
-          sendbuf[T_SEND_S][m * (bwidth - 2 * g) + n - g] =
-              u1[(m + bwidth - 2 * g) * bwidth + n];
-        }
-      }
+      writeSendBuf(sendbuf[T_SEND_S], u1, bwidth, bwidth - 2 * g, g,
+                   bheight - 2 * g, g);
       MPI_Isend(sendbuf[T_SEND_S], g * (bwidth - 2 * g), MPI_DOUBLE, n_s,
                 T_SEND_S, MPI_COMM_WORLD, &req);
       MPI_Irecv(recvbuf[T_SEND_S], g * (bwidth - 2 * g), MPI_DOUBLE, n_s,
                 T_SEND_N, MPI_COMM_WORLD, &req_recv[T_SEND_S]);
-      for (m = 0; m < g; m++) {
-        for (n = g; n < bwidth - g; n++) {
-          u1[(m + bwidth - g) * bwidth + n] =
-              recvbuf[T_SEND_S][m * (bwidth - 2 * g) + n - g];
-        }
-      }
+      readRecvBuf(recvbuf[T_SEND_S], u1, bwidth, bwidth - 2 * g, g, bheight - g,
+                  g);
 
       // Südwestliche Ecke.
       if (bj > 0) {
-        for (m = 0; m < g; m++) {
-          for (n = 0; n < g; n++) {
-            sendbuf[T_SEND_SW][m * g + n] =
-                u1[(m + bheight - 2 * g) * bwidth + n + g];
-          }
-        }
+        writeSendBuf(sendbuf[T_SEND_SW], u1, bwidth, g, g, bheight - 2 * g, g);
         MPI_Isend(sendbuf[T_SEND_SW], g * g, MPI_DOUBLE, n_sw, T_SEND_SW,
                   MPI_COMM_WORLD, &req);
         MPI_Irecv(recvbuf[T_SEND_SW], g * g, MPI_DOUBLE, n_sw, T_SEND_NE,
                   MPI_COMM_WORLD, &req_recv[T_SEND_SW]);
-        for (m = 0; m < g; m++) {
-          for (n = 0; n < g; n++) {
-            u1[(m + bheight - g) * bwidth + n] = recvbuf[T_SEND_SW][m * g + n];
-          }
-        }
+        readRecvBuf(recvbuf[T_SEND_SW], u1, bwidth, g, g, bheight - g, 0);
       }
 
       // Südöstliche Ecke.
       if (bj < num_blocks_per_row - 1) {
-        for (m = 0; m < g; m++) {
-          for (n = 0; n < g; n++) {
-            sendbuf[T_SEND_SE][m * g + n] =
-                u1[(m + bheight - 2 * g) * bwidth + n + bwidth - 2 * g];
-          }
-        }
+        writeSendBuf(sendbuf[T_SEND_SE], u1, bwidth, g, g, bheight - 2 * g,
+                     bwidth - 2 * g);
         MPI_Isend(sendbuf[T_SEND_SE], g * g, MPI_DOUBLE, n_se, T_SEND_SE,
                   MPI_COMM_WORLD, &req);
         MPI_Irecv(recvbuf[T_SEND_SE], g * g, MPI_DOUBLE, n_se, T_SEND_NW,
                   MPI_COMM_WORLD, &req_recv[T_SEND_SE]);
-        for (m = 0; m < g; m++) {
-          for (n = 0; n < g; n++) {
-            u1[(m + bheight - g) * bwidth + n + bwidth - g] =
-                recvbuf[T_SEND_SE][m * g + n];
-          }
-        }
+        readRecvBuf(recvbuf[T_SEND_SE], u1, bwidth, g, g, bheight - g,
+                    bwidth - g);
       }
     }
 
     // Linken Rand nach links senden und rechten Rand von links empfangen.
     if (bj > 0) {
-      int m, n;
-      for (m = g; m < bheight - g; m++) {
-        for (n = 0; n < g; n++) {
-          sendbuf[T_SEND_W][(m - g) * g + n] = u1[m * bwidth + g + n];
-        }
-      }
+      writeSendBuf(sendbuf[T_SEND_W], u1, bwidth, g, bheight - 2 * g, g, g);
       MPI_Isend(sendbuf[T_SEND_W], g * (bheight - 2 * g), MPI_DOUBLE, n_w,
                 T_SEND_W, MPI_COMM_WORLD, &req);
       MPI_Irecv(recvbuf[T_SEND_W], g * (bheight - 2 * g), MPI_DOUBLE, n_w,
                 T_SEND_E, MPI_COMM_WORLD, &req_recv[T_SEND_W]);
-      for (m = g; m < bheight - g; m++) {
-        for (n = 0; n < g; n++) {
-          u1[m * bwidth + n] = recvbuf[T_SEND_W][(m - g) * g + n];
-        }
-      }
+      readRecvBuf(recvbuf[T_SEND_W], u1, bwidth, g, bheight - 2 * g, g, 0);
     }
 
     // Rechten Rand nach Rechts senden und linken Rand von rechts empfangen.
     if (bj < num_blocks_per_row - 1) {
-      int m, n;
-      for (m = g; m < bheight - g; m++) {
-        for (n = 0; n < g; n++) {
-          sendbuf[T_SEND_E][(m - g) * g + n] =
-              u1[m * bwidth + bwidth - 2 * g + n];
-        }
-      }
+      writeSendBuf(sendbuf[T_SEND_E], u1, bwidth, g, bheight - 2 * g, g,
+                   bwidth - 2 * g);
       MPI_Isend(sendbuf[T_SEND_E], g * (bheight - 2 * g), MPI_DOUBLE, n_e,
                 T_SEND_E, MPI_COMM_WORLD, &req);
       MPI_Irecv(recvbuf[T_SEND_E], g * (bheight - 2 * g), MPI_DOUBLE, n_e,
                 T_SEND_W, MPI_COMM_WORLD, &req_recv[T_SEND_E]);
-
-      for (m = g; m < bheight - g; m++) {
-        for (n = 0; n < g; n++) {
-          u1[m * bwidth + bwidth - g + n] = recvbuf[T_SEND_E][(m - g) * g + n];
-        }
-      }
+      readRecvBuf(recvbuf[T_SEND_E], u1, bwidth, g, bheight - 2 * g, g,
+                  bwidth - g);
     }
 
     // Warte, bis alle Daten angekommen sind.
