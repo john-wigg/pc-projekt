@@ -382,6 +382,7 @@ int main(int argc, char **argv) {
 
   double t2 = MPI_Wtime();
   double time_per_step = (t2 - t1) / iter;
+  // Normalisiere benötigte Kommunikationszeit auf Iterationsanzahl
   time_spent_comm /= iter;
 
   // Blöcke einsammeln
@@ -419,8 +420,11 @@ int main(int argc, char **argv) {
         }
       }
     }
-    printf("time per step: %f, time on comm per step: %f, t: %f\n",
-           time_per_step, time_spent_comm, t);
+    printf("Benötigte Zeit pro Iterationsschritt: %f\n", time_per_step);
+    printf(
+        "Für Kommunikation benötigte Zeit pro Iterationsschritt: %f (%f %%)\n",
+        time_spent_comm, time_spent_comm / time_per_step * 100);
+
     printPPMP6(u, size, ofilename);
   }
 
