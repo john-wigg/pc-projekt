@@ -29,6 +29,17 @@ typedef struct config_s {
   int scenario;  //<! Gewähltes Szeneria, d.h. Anfangs- und Randbedingungen
 } t_config;
 
+/**
+ * @brief Beschreibt einen Sendebuffer mit Daten aus dem Gitter.
+ *
+ * @param sendbuf Sendebuffer
+ * @param sourcebuf Quellenbuffer (Gitter)
+ * @param bwidth Gitterbreite des Quellenbuffers
+ * @param bufw Gitterbreite des Sendebuffers
+ * @param bufh Gitterhöhe des Sendebuffers
+ * @param ioff Index i der oberen linken Ecke des zu sendenden Bereiches
+ * @param joff Index j der oberen linken Ecke des zu sendenden Bereiches
+ */
 static inline void writeSendBuf(double *sendbuf, double *sourcebuf, int bwidth,
                                 int bufw, int bufh, int ioff, int joff) {
   int m, n;
@@ -230,133 +241,117 @@ int main(int argc, char **argv) {
   double t1 = MPI_Wtime();
   double time_spent_comm = 0.0;
 
+  // TODO: MPI_PROC_NULL mit if-Abfragen
+  int n_w = bi * num_blocks_per_row + bj - 1;
+  int n_e = bi * num_blocks_per_row + bj + 1;
+  int n_n = (bi - 1) * num_blocks_per_row + bj;
+  int n_s = (bi + 1) * num_blocks_per_row + bj;
+  int n_nw = (bi - 1) * num_blocks_per_row + bj - 1;
+  int n_se = (bi + 1) * num_blocks_per_row + bj + 1;
+  int n_ne = (bi - 1) * num_blocks_per_row + bj + 1;
+  int n_sw = (bi + 1) * num_blocks_per_row + bj - 1;
+  if (bi == 0) {
+    n_n = MPI_PROC_NULL;
+    n_ne = MPI_PROC_NULL;
+    n_nw = MPI_PROC_NULL;
+  }
+  if (bi == num_blocks_per_col - 1) {
+    n_s = MPI_PROC_NULL;
+    n_se = MPI_PROC_NULL;
+    n_sw = MPI_PROC_NULL;
+  }
+
+  if (bj == 0) {
+    n_w = MPI_PROC_NULL;
+    n_nw = MPI_PROC_NULL;
+    n_sw = MPI_PROC_NULL;
+  }
+  if (bj == num_blocks_per_row - 1) {
+    n_e = MPI_PROC_NULL;
+    n_ne = MPI_PROC_NULL;
+    n_se = MPI_PROC_NULL;
+  }
+
   for (l = 0; l < iter / g; l++) {
     double t1comm = MPI_Wtime();
 
     // Austauschen der Randbereiche.
     MPI_Barrier(MPI_COMM_WORLD);  // Synchronisiere alle Prozesse.
-    // Indizes der Benachbarten Blöcke.
-    int n_w = bi * num_blocks_per_row + bj - 1;
-    int n_e = bi * num_blocks_per_row + bj + 1;
-    int n_n = (bi - 1) * num_blocks_per_row + bj;
-    int n_s = (bi + 1) * num_blocks_per_row + bj;
-    int n_nw = (bi - 1) * num_blocks_per_row + bj - 1;
-    int n_se = (bi + 1) * num_blocks_per_row + bj + 1;
-    int n_ne = (bi - 1) * num_blocks_per_row + bj + 1;
-    int n_sw = (bi + 1) * num_blocks_per_row + bj - 1;
+                                  // Indizes der Benachbarten Blöcke.
 
     // Oberen Rand nach oben senden und unteren Rand von Oben empfangen
-    if (bi > 0) {
-      writeSendBuf(sendbuf[T_SEND_N], u1, bwidth, bwidth - 2 * g, g, g, g);
-      MPI_Isend(sendbuf[T_SEND_N], g * (bwidth - 2 * g), MPI_DOUBLE, n_n,
-                T_SEND_N, MPI_COMM_WORLD, &req);
-      MPI_Irecv(recvbuf[T_SEND_N], g * (bwidth - 2 * g), MPI_DOUBLE, n_n,
-                T_SEND_S, MPI_COMM_WORLD, &req_recv[T_SEND_N]);
-      readRecvBuf(recvbuf[T_SEND_N], u1, bwidth, bwidth - 2 * g, g, 0, g);
+    writeSendBuf(sendbuf[T_SEND_N], u1, bwidth, bwidth - 2 * g, g, g, g);
+    MPI_Isend(sendbuf[T_SEND_N], g * (bwidth - 2 * g), MPI_DOUBLE, n_n,
+              T_SEND_N, MPI_COMM_WORLD, &req);
+    MPI_Irecv(recvbuf[T_SEND_N], g * (bwidth - 2 * g), MPI_DOUBLE, n_n,
+              T_SEND_S, MPI_COMM_WORLD, &req_recv[T_SEND_N]);
+    readRecvBuf(recvbuf[T_SEND_N], u1, bwidth, bwidth - 2 * g, g, 0, g);
 
-      // Nordwestliche Ecke.
-      if (bj > 0) {
-        writeSendBuf(sendbuf[T_SEND_NW], u1, bwidth, g, g, g, g);
-        MPI_Isend(sendbuf[T_SEND_NW], g * g, MPI_DOUBLE, n_nw, T_SEND_NW,
-                  MPI_COMM_WORLD, &req);
-        MPI_Irecv(recvbuf[T_SEND_NW], g * g, MPI_DOUBLE, n_nw, T_SEND_SE,
-                  MPI_COMM_WORLD, &req_recv[T_SEND_NW]);
-        readRecvBuf(recvbuf[T_SEND_NW], u1, bwidth, g, g, 0, 0);
-      }
+    // Nordwestliche Ecke.
+    writeSendBuf(sendbuf[T_SEND_NW], u1, bwidth, g, g, g, g);
+    MPI_Isend(sendbuf[T_SEND_NW], g * g, MPI_DOUBLE, n_nw, T_SEND_NW,
+              MPI_COMM_WORLD, &req);
+    MPI_Irecv(recvbuf[T_SEND_NW], g * g, MPI_DOUBLE, n_nw, T_SEND_SE,
+              MPI_COMM_WORLD, &req_recv[T_SEND_NW]);
+    readRecvBuf(recvbuf[T_SEND_NW], u1, bwidth, g, g, 0, 0);
 
-      // Nordöstliche Ecke.
-      if (bj < num_blocks_per_row - 1) {
-        writeSendBuf(sendbuf[T_SEND_NE], u1, bwidth, g, g, g, bwidth - 2 * g);
-        MPI_Isend(sendbuf[T_SEND_NE], g * g, MPI_DOUBLE, n_ne, T_SEND_NE,
-                  MPI_COMM_WORLD, &req);
-        MPI_Irecv(recvbuf[T_SEND_NE], g * g, MPI_DOUBLE, n_ne, T_SEND_SW,
-                  MPI_COMM_WORLD, &req_recv[T_SEND_NE]);
-        readRecvBuf(recvbuf[T_SEND_NE], u1, bwidth, g, g, 0, bwidth - g);
-      }
-    }
+    // Nordöstliche Ecke.
+    writeSendBuf(sendbuf[T_SEND_NE], u1, bwidth, g, g, g, bwidth - 2 * g);
+    MPI_Isend(sendbuf[T_SEND_NE], g * g, MPI_DOUBLE, n_ne, T_SEND_NE,
+              MPI_COMM_WORLD, &req);
+    MPI_Irecv(recvbuf[T_SEND_NE], g * g, MPI_DOUBLE, n_ne, T_SEND_SW,
+              MPI_COMM_WORLD, &req_recv[T_SEND_NE]);
+    readRecvBuf(recvbuf[T_SEND_NE], u1, bwidth, g, g, 0, bwidth - g);
 
     // Unteren Rand nach unten senden und oberen Rand von unten empfangen
-    if (bi < num_blocks_per_col - 1) {
-      writeSendBuf(sendbuf[T_SEND_S], u1, bwidth, bwidth - 2 * g, g,
-                   bheight - 2 * g, g);
-      MPI_Isend(sendbuf[T_SEND_S], g * (bwidth - 2 * g), MPI_DOUBLE, n_s,
-                T_SEND_S, MPI_COMM_WORLD, &req);
-      MPI_Irecv(recvbuf[T_SEND_S], g * (bwidth - 2 * g), MPI_DOUBLE, n_s,
-                T_SEND_N, MPI_COMM_WORLD, &req_recv[T_SEND_S]);
-      readRecvBuf(recvbuf[T_SEND_S], u1, bwidth, bwidth - 2 * g, g, bheight - g,
-                  g);
+    writeSendBuf(sendbuf[T_SEND_S], u1, bwidth, bwidth - 2 * g, g,
+                 bheight - 2 * g, g);
+    MPI_Isend(sendbuf[T_SEND_S], g * (bwidth - 2 * g), MPI_DOUBLE, n_s,
+              T_SEND_S, MPI_COMM_WORLD, &req);
+    MPI_Irecv(recvbuf[T_SEND_S], g * (bwidth - 2 * g), MPI_DOUBLE, n_s,
+              T_SEND_N, MPI_COMM_WORLD, &req_recv[T_SEND_S]);
+    readRecvBuf(recvbuf[T_SEND_S], u1, bwidth, bwidth - 2 * g, g, bheight - g,
+                g);
 
-      // Südwestliche Ecke.
-      if (bj > 0) {
-        writeSendBuf(sendbuf[T_SEND_SW], u1, bwidth, g, g, bheight - 2 * g, g);
-        MPI_Isend(sendbuf[T_SEND_SW], g * g, MPI_DOUBLE, n_sw, T_SEND_SW,
-                  MPI_COMM_WORLD, &req);
-        MPI_Irecv(recvbuf[T_SEND_SW], g * g, MPI_DOUBLE, n_sw, T_SEND_NE,
-                  MPI_COMM_WORLD, &req_recv[T_SEND_SW]);
-        readRecvBuf(recvbuf[T_SEND_SW], u1, bwidth, g, g, bheight - g, 0);
-      }
+    // Südwestliche Ecke.
+    writeSendBuf(sendbuf[T_SEND_SW], u1, bwidth, g, g, bheight - 2 * g, g);
+    MPI_Isend(sendbuf[T_SEND_SW], g * g, MPI_DOUBLE, n_sw, T_SEND_SW,
+              MPI_COMM_WORLD, &req);
+    MPI_Irecv(recvbuf[T_SEND_SW], g * g, MPI_DOUBLE, n_sw, T_SEND_NE,
+              MPI_COMM_WORLD, &req_recv[T_SEND_SW]);
+    readRecvBuf(recvbuf[T_SEND_SW], u1, bwidth, g, g, bheight - g, 0);
 
-      // Südöstliche Ecke.
-      if (bj < num_blocks_per_row - 1) {
-        writeSendBuf(sendbuf[T_SEND_SE], u1, bwidth, g, g, bheight - 2 * g,
-                     bwidth - 2 * g);
-        MPI_Isend(sendbuf[T_SEND_SE], g * g, MPI_DOUBLE, n_se, T_SEND_SE,
-                  MPI_COMM_WORLD, &req);
-        MPI_Irecv(recvbuf[T_SEND_SE], g * g, MPI_DOUBLE, n_se, T_SEND_NW,
-                  MPI_COMM_WORLD, &req_recv[T_SEND_SE]);
-        readRecvBuf(recvbuf[T_SEND_SE], u1, bwidth, g, g, bheight - g,
-                    bwidth - g);
-      }
-    }
+    // Südöstliche Ecke.
+    writeSendBuf(sendbuf[T_SEND_SE], u1, bwidth, g, g, bheight - 2 * g,
+                 bwidth - 2 * g);
+    MPI_Isend(sendbuf[T_SEND_SE], g * g, MPI_DOUBLE, n_se, T_SEND_SE,
+              MPI_COMM_WORLD, &req);
+    MPI_Irecv(recvbuf[T_SEND_SE], g * g, MPI_DOUBLE, n_se, T_SEND_NW,
+              MPI_COMM_WORLD, &req_recv[T_SEND_SE]);
+    readRecvBuf(recvbuf[T_SEND_SE], u1, bwidth, g, g, bheight - g, bwidth - g);
 
     // Linken Rand nach links senden und rechten Rand von links empfangen.
-    if (bj > 0) {
-      writeSendBuf(sendbuf[T_SEND_W], u1, bwidth, g, bheight - 2 * g, g, g);
-      MPI_Isend(sendbuf[T_SEND_W], g * (bheight - 2 * g), MPI_DOUBLE, n_w,
-                T_SEND_W, MPI_COMM_WORLD, &req);
-      MPI_Irecv(recvbuf[T_SEND_W], g * (bheight - 2 * g), MPI_DOUBLE, n_w,
-                T_SEND_E, MPI_COMM_WORLD, &req_recv[T_SEND_W]);
-      readRecvBuf(recvbuf[T_SEND_W], u1, bwidth, g, bheight - 2 * g, g, 0);
-    }
+    writeSendBuf(sendbuf[T_SEND_W], u1, bwidth, g, bheight - 2 * g, g, g);
+    MPI_Isend(sendbuf[T_SEND_W], g * (bheight - 2 * g), MPI_DOUBLE, n_w,
+              T_SEND_W, MPI_COMM_WORLD, &req);
+    MPI_Irecv(recvbuf[T_SEND_W], g * (bheight - 2 * g), MPI_DOUBLE, n_w,
+              T_SEND_E, MPI_COMM_WORLD, &req_recv[T_SEND_W]);
+    readRecvBuf(recvbuf[T_SEND_W], u1, bwidth, g, bheight - 2 * g, g, 0);
 
     // Rechten Rand nach Rechts senden und linken Rand von rechts empfangen.
-    if (bj < num_blocks_per_row - 1) {
-      writeSendBuf(sendbuf[T_SEND_E], u1, bwidth, g, bheight - 2 * g, g,
-                   bwidth - 2 * g);
-      MPI_Isend(sendbuf[T_SEND_E], g * (bheight - 2 * g), MPI_DOUBLE, n_e,
-                T_SEND_E, MPI_COMM_WORLD, &req);
-      MPI_Irecv(recvbuf[T_SEND_E], g * (bheight - 2 * g), MPI_DOUBLE, n_e,
-                T_SEND_W, MPI_COMM_WORLD, &req_recv[T_SEND_E]);
-      readRecvBuf(recvbuf[T_SEND_E], u1, bwidth, g, bheight - 2 * g, g,
-                  bwidth - g);
-    }
+    writeSendBuf(sendbuf[T_SEND_E], u1, bwidth, g, bheight - 2 * g, g,
+                 bwidth - 2 * g);
+    MPI_Isend(sendbuf[T_SEND_E], g * (bheight - 2 * g), MPI_DOUBLE, n_e,
+              T_SEND_E, MPI_COMM_WORLD, &req);
+    MPI_Irecv(recvbuf[T_SEND_E], g * (bheight - 2 * g), MPI_DOUBLE, n_e,
+              T_SEND_W, MPI_COMM_WORLD, &req_recv[T_SEND_E]);
+    readRecvBuf(recvbuf[T_SEND_E], u1, bwidth, g, bheight - 2 * g, g,
+                bwidth - g);
 
     // Warte, bis alle Daten angekommen sind.
-    if (bi > 0) {
-      MPI_Wait(&req_recv[T_SEND_N], &stat);
-      if (bj > 0) {
-        MPI_Wait(&req_recv[T_SEND_NW], &stat);
-      }
-
-      if (bj < num_blocks_per_row - 1) {
-        MPI_Wait(&req_recv[T_SEND_NE], &stat);
-      }
-    }
-    if (bi < num_blocks_per_col - 1) {
-      MPI_Wait(&req_recv[T_SEND_S], &stat);
-      if (bj > 0) {
-        MPI_Wait(&req_recv[T_SEND_SW], &stat);
-      }
-
-      if (bj < num_blocks_per_row - 1) {
-        MPI_Wait(&req_recv[T_SEND_SE], &stat);
-      }
-    }
-    if (bj > 0) {
-      MPI_Wait(&req_recv[T_SEND_W], &stat);
-    }
-    if (bj < num_blocks_per_row - 1) {
-      MPI_Wait(&req_recv[T_SEND_E], &stat);
+    int n;
+    for (n = 0; n < 8; n++) {
+      MPI_Wait(&req_recv[n], &stat);
     }
 
     double t2comm = MPI_Wtime();
