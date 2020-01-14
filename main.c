@@ -30,13 +30,14 @@ typedef struct config_s {
 } t_config;
 
 /**
- * @brief Beschreibt einen Sendebuffer mit Daten aus dem Gitter.
+ * @brief Beschreibt einen Sendebuffer mit den Daten eines Bereiches des
+ * Quellbuffers (Gitters).
  *
  * @param sendbuf Sendebuffer
  * @param sourcebuf Quellenbuffer (Gitter)
- * @param bwidth Gitterbreite des Quellenbuffers
- * @param bufw Gitterbreite des Sendebuffers
- * @param bufh Gitterhöhe des Sendebuffers
+ * @param bwidth Zeilenlänge des Quellenbuffers
+ * @param bufw Zeilenlänge des Sendebuffers
+ * @param bufh Spaltenlänge des Sendebuffers
  * @param ioff Index i der oberen linken Ecke des zu sendenden Bereiches
  * @param joff Index j der oberen linken Ecke des zu sendenden Bereiches
  */
@@ -50,6 +51,18 @@ static inline void writeSendBuf(double *sendbuf, double *sourcebuf, int bwidth,
   }
 }
 
+/**
+ * @brief Beschreibt einen Bereich des Zielbuffers (Gitters) mit Daten aus einem
+ * Empfangsbuffer.
+ *
+ * @param recvbuf Empfangsbuffer
+ * @param targetbuf Zielbuffer (Gitter)
+ * @param bwidth Zeilenlänge des Zielbuffers
+ * @param bufw Zeilenlänge des Empfangsbuffers
+ * @param bufh Spaltenlänge des Empfangsbuffers
+ * @param ioff Index i der oberen linken Ecke des zu sendenden Bereiches
+ * @param joff Index j der oberen linken Ecke des zu sendenden Bereiches
+ */
 static inline void readRecvBuf(double *recvbuf, double *targetbuf, int bwidth,
                                int bufw, int bufh, int ioff, int joff) {
   int m, n;
