@@ -63,7 +63,7 @@ int main(int argc, char **argv) {
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
   // Ausgabedatei
-  char filename[64];
+  char ofilename[64];
   char ifilename[64];
 
   // Es könnte zwar jeder Prozess die Inputdatei einlesen, um Leseoperationen zu
@@ -96,7 +96,7 @@ int main(int argc, char **argv) {
 
   // Übergabeparameter für [size iter g filename] einlesen
   if (argc != 3 || !sscanf(argv[1], "%s", ifilename) ||
-      !sscanf(argv[2], "%s", filename)) {
+      !sscanf(argv[2], "%s", ofilename)) {
     if (rank == 0) printf("Nutzung: %s <ifile> <ofile>\n", argv[0]);
     MPI_Finalize();
     return -1;
