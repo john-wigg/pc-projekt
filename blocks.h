@@ -15,16 +15,15 @@
  * zum Beispiel ein Block ihren Überschneidungsbereich an den Block links von
  * ihm, so wird der Tag \p T_SEND_E verwendet.
  */
-enum
-{
-    T_SEND_N,
-    T_SEND_S,
-    T_SEND_E,
-    T_SEND_W,
-    T_SEND_NW,
-    T_SEND_NE,
-    T_SEND_SW,
-    T_SEND_SE
+enum {
+  T_SEND_N,
+  T_SEND_S,
+  T_SEND_E,
+  T_SEND_W,
+  T_SEND_NW,
+  T_SEND_NE,
+  T_SEND_SW,
+  T_SEND_SE
 };
 
 /**
@@ -51,4 +50,4 @@ void swap(double **t1, double **t2);
 void updatePoint(double *t1, double *t2, int i, int j, double adjstep,
                  int size);
 
-#endif // BLOCKS_H_
+#endif  // BLOCKS_H_
