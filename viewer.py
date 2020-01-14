@@ -1,3 +1,3 @@
 from PIL import Image
-im = Image.open("build/out.ppm")
+im = Image.open("out.ppm")
 im.show()
