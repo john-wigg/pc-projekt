@@ -349,10 +349,7 @@ int main(int argc, char **argv) {
                 bwidth - g);
 
     // Warte, bis alle Daten angekommen sind.
-    int n;
-    for (n = 0; n < 8; n++) {
-      MPI_Wait(&req_recv[n], &stat);
-    }
+    MPI_Waitall(8, req_recv, MPI_STATUS_IGNORE);
 
     double t2comm = MPI_Wtime();
     time_spent_comm += t2comm - t1comm;
