@@ -206,7 +206,6 @@ int main(int argc, char **argv) {
   double adjstep = alpha * adj * 0.25;
 
   // Iteration im Block.
-  MPI_Status stat;
   MPI_Request req;
   MPI_Request req_recv[8];
   double *recvbuf[8];
