@@ -426,7 +426,7 @@ int main(int argc, char **argv) {
     }
     printf("time per step: %f, time on comm per step: %f, t: %f\n",
            time_per_step, time_spent_comm, t);
-    printPPMP6(u, size, "out.ppm");
+    printPPMP6(u, size, ofilename);
   }
 
   free(u1);
