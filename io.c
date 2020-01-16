@@ -78,7 +78,7 @@ void printPPMP6(double *t, int size, const char *filename) {
 }
 
 void printPPMP6MPI(double *t, int size, int bwidth, int bheight, int imin,
-                   int jmin, int gw, const char *filename, int rank) {
+                   int jmin, int g, const char *filename, int rank) {
   char header[128];
   sprintf(header, "P6\n%i %i\n255\n", size, size);
   int header_len = strlen(header);
@@ -93,8 +93,8 @@ void printPPMP6MPI(double *t, int size, int bwidth, int bheight, int imin,
   double tmax = 25.0;
   double tmin = -tmax;
   __uint8_t rgb[3];
-  for (int i = gw; i < bheight - gw; i++) {
-    for (int j = gw; j < bwidth - gw; j++) {
+  for (int i = g; i < bheight - g; i++) {
+    for (int j = g; j < bwidth - g; j++) {
       double val = t[j + i * bwidth];
       rgb[0] = 0;
       rgb[1] = 0;
@@ -117,7 +117,7 @@ void printPPMP6MPI(double *t, int size, int bwidth, int bheight, int imin,
         rgb[0] = 255;
       }
       MPI_Offset offset =
-          ((imin + i - gw) * size + (jmin + j - gw)) * 3 * sizeof(__uint8_t) +
+          ((imin + i - g) * size + (jmin + j - g)) * 3 * sizeof(__uint8_t) +
           header_len;
       MPI_File_write_at(fh, offset, rgb, 3, MPI_UNSIGNED_CHAR,
                         MPI_STATUS_IGNORE);

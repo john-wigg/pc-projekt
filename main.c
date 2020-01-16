@@ -401,57 +401,13 @@ int main(int argc, char **argv) {
         time_spent_comm, time_spent_comm / time_per_step * 100);
   }
 
+  if (rank == 0) printf("Schreibe in Datei...\n");
+
   printPPMP6MPI(u1, size, bwidth, bheight, imin, jmin, g, ofilename, rank);
-
-  /*
-
-  // Blöcke einsammeln
-  double *buf;
-  double *u;
-  if (rank == 0) {
-    buf = (double *)malloc(num * bheight * bwidth * sizeof(double));
-    u = (double *)malloc(size * size * sizeof(double));
-  }
-
-  MPI_Gather(u1, bheight * bwidth, MPI_DOUBLE, buf, bheight * bwidth,
-             MPI_DOUBLE, 0, MPI_COMM_WORLD);
-
-  // Sortiere das Empfangene Array.
-  // TODO: Da findet man sicherlich noch ne schönere Methode
-  if (rank == 0) {
-    int r;
-    for (r = 0; r < num; r++) {
-      int bi, bj;
-      bi = r / num_blocks_per_row;  // Zeilenindex.
-      bj = r % num_blocks_per_row;  // Spaltenindex.
-
-      // Indizes der oberen linken Zelle.
-      int imin, jmin;
-      imin = (bheight - 2 * g) * bi;
-      jmin = (bwidth - 2 * g) * bj;
-
-      for (i = g; i < bheight - g; i++) {
-        if (imin + i - g > size - 1)
-          continue;  // Falls Blöcke über die Ränder hinausragen.
-        for (j = g; j < bwidth - g; j++) {
-          if (jmin + j - g > size - 1) continue;
-          u[(imin + i - g) * size + (jmin + j - g)] =
-              buf[r * bheight * bwidth + i * bwidth + j];
-        }
-      }
-    }
-    printPPMP6(u, size, ofilename);
-    */
 
   free(u1);
   free(u2);
 
-  /*
-    if (rank == 0) {
-      free(buf);
-      free(u);
-    }
-    */
   MPI_Finalize();
   return 0;
 }
