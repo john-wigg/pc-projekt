@@ -394,6 +394,17 @@ int main(int argc, char **argv) {
   // Normalisiere benötigte Kommunikationszeit auf Iterationsanzahl
   time_spent_comm /= iter;
 
+  if (rank == 0) {
+    printf("Benötigte Zeit pro Iterationsschritt: %f\n", time_per_step);
+    printf(
+        "Für Kommunikation benötigte Zeit pro Iterationsschritt: %f (%f %%)\n",
+        time_spent_comm, time_spent_comm / time_per_step * 100);
+  }
+
+  printPPMP6MPI(u1, size, bwidth, bheight, imin, jmin, g, ofilename, rank);
+
+  /*
+
   // Blöcke einsammeln
   double *buf;
   double *u;
@@ -429,21 +440,18 @@ int main(int argc, char **argv) {
         }
       }
     }
-    printf("Benötigte Zeit pro Iterationsschritt: %f\n", time_per_step);
-    printf(
-        "Für Kommunikation benötigte Zeit pro Iterationsschritt: %f (%f %%)\n",
-        time_spent_comm, time_spent_comm / time_per_step * 100);
-
     printPPMP6(u, size, ofilename);
-  }
+    */
 
   free(u1);
   free(u2);
 
-  if (rank == 0) {
-    free(buf);
-    free(u);
-  }
+  /*
+    if (rank == 0) {
+      free(buf);
+      free(u);
+    }
+    */
   MPI_Finalize();
   return 0;
 }
