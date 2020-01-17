@@ -388,7 +388,7 @@ int main(int argc, char **argv) {
       if (((l * g) + k) % ostep == 0) {
         char oname[256];
         sprintf(oname, "%s%d", ofilename, ((l * g) + k));
-        printPPMP6MPI(u1, size, bwidth, bheight, imin, jmin, g, oname, rank);
+        printPPM(u1, size, bwidth, bheight, imin, jmin, g, oname, rank);
       }
     }
     t += dt;
