@@ -394,7 +394,7 @@ int main(int argc, char **argv) {
       }
       swap(&u1, &u2);
 
-      if (((l * g) + k) % ostep == 0) {
+      if (ostep > 0 && ((l * g) + k) % ostep == 0) {
         char oname[256];
         sprintf(oname, "%s%d", ofilename, ((l * g) + k));
         printPPM(u1, size, bwidth, bheight, imin, jmin, g, oname, rank);
