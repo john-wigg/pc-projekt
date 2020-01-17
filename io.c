@@ -92,42 +92,44 @@ void printPPMP6MPI(double *t, int size, int bwidth, int bheight, int imin,
 
   double tmax = 25.0;
   double tmin = -tmax;
-  __uint8_t rgb[3];
+  __uint8_t *rgb;
+  rgb = (__uint8_t *)malloc((bwidth - 2 * g) * 3 * sizeof(__uint8_t));
+
   for (int i = g; i < bheight - g; i++) {
     for (int j = g; j < bwidth - g; j++) {
       double val = t[j + i * bwidth];
-      rgb[0] = 0;
-      rgb[1] = 0;
-      rgb[2] = 0;
+      int off = 3 * (j - g);  // local offset
+      rgb[0 + off] = 0;
+      rgb[1 + off] = 0;
+      rgb[2 + off] = 0;
       if (val <= tmin) {
-        rgb[2] = 255;
+        rgb[2 + off] = 255;
       } else if (val >= -25.0 && val < -5) {
-        rgb[2] = 255;
-        rgb[1] = (__uint8_t)(255 * ((val + 25) / 20));
+        rgb[2 + off] = 255;
+        rgb[1 + off] = (__uint8_t)(255 * ((val + 25) / 20));
       } else if (val >= -5 && val <= 0.0) {
-        rgb[1] = 255;
-        rgb[2] = (__uint8_t)(255 * (1.0 - (val + 5) / 5));
+        rgb[1 + off] = 255;
+        rgb[2 + off] = (__uint8_t)(255 * (1.0 - (val + 5) / 5));
       } else if (val > 0.0 && val <= 5) {
-        rgb[1] = 255;
-        rgb[0] = (__uint8_t)(255 * ((val) / 5));
+        rgb[1 + off] = 255;
+        rgb[0 + off] = (__uint8_t)(255 * ((val) / 5));
       } else if (val > 5 && val < 25.0) {
-        rgb[0] = 255;
-        rgb[1] = (__uint8_t)(255 * ((25 - val) / 20));
+        rgb[0 + off] = 255;
+        rgb[1 + off] = (__uint8_t)(255 * ((25 - val) / 20));
       } else {
-        rgb[0] = 255;
+        rgb[0 + off] = 255;
       }
-      MPI_Offset offset =
-          ((imin + i - g) * size + (jmin + j - g)) * 3 * sizeof(__uint8_t) +
-          header_len;
-      MPI_File_write_at(fh, offset, rgb, 3, MPI_UNSIGNED_CHAR,
-                        MPI_STATUS_IGNORE);
     }
+    MPI_Offset offset =
+        ((imin + i - g) * size + jmin) * 3 * sizeof(__uint8_t) + header_len;
+    MPI_File_write_at(fh, offset, rgb, 3 * (bwidth - 2 * g), MPI_UNSIGNED_CHAR,
+                      MPI_STATUS_IGNORE);
   }
   MPI_File_close(&fh);
 }
 
 void readInputFile(int *size, int *iter, int *g, double *adj, double *alpha,
-                   double *a, int *scenario, const char *filename) {
+                   double *a, int *scenario, int *ostep, const char *filename) {
   FILE *f = fopen(filename, "r");
 
   fscanf(f, "%d\n", size);
@@ -137,6 +139,7 @@ void readInputFile(int *size, int *iter, int *g, double *adj, double *alpha,
   fscanf(f, "%lf\n", alpha);
   fscanf(f, "%lf\n", a);
   fscanf(f, "%d\n", scenario);
+  fscanf(f, "%d\n", ostep);
 
   fclose(f);
 }

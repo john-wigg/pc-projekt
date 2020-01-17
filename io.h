@@ -45,7 +45,7 @@ void printPPMP6(double *t, int size, const char *filename);
  * @param filename Dateiname der Inputdatei.
  */
 void readInputFile(int *size, int *iter, int *g, double *adj, double *alpha,
-                   double *a, int *scenario, const char *filename);
+                   double *a, int *scenario, int *ostep, const char *filename);
 
 void printPPMP6MPI(double *t, int size, int bwidth, int bheight, int imin,
                    int jmin, int g, const char *filename, int rank);

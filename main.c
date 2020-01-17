@@ -27,6 +27,7 @@ typedef struct config_s {
   int iter;      //<! Maximale Iterationsschritte
   int g;         //<! Breite der Geisterzonen in Zellen
   int scenario;  //<! Gewähltes Szeneria, d.h. Anfangs- und Randbedingungen
+  int ostep;     //<! Schrittabstand für Zwischenausgabe
 } t_config;
 
 /**
@@ -98,14 +99,14 @@ int main(int argc, char **argv) {
                     // Konfiguration enthält.
 
   // Serialisieren des Structs mittel MPI_Type_create_struct.
-  const int count = 7;  // Anzahl der Blöcke im Struct hier entspricht jeder
+  const int count = 8;  // Anzahl der Blöcke im Struct hier entspricht jeder
                         // Block einem Element.
-  int array_of_blocklengths[7] = {1, 1, 1, 1,
-                                  1, 1, 1};  // Längen der Blöcke im Struct.
-  MPI_Datatype array_of_types[7] = {
-      MPI_DOUBLE, MPI_DOUBLE, MPI_DOUBLE, MPI_INT,
-      MPI_INT,    MPI_INT,    MPI_INT};    // Typen der Blöcke im Struct.
-  MPI_Aint array_of_displacements[count];  // Offsets der Blöcke im Struct.
+  int array_of_blocklengths[8] = {1, 1, 1, 1,
+                                  1, 1, 1, 1};  // Längen der Blöcke im Struct.
+  MPI_Datatype array_of_types[8] = {
+      MPI_DOUBLE, MPI_DOUBLE, MPI_DOUBLE, MPI_INT, MPI_INT,
+      MPI_INT,    MPI_INT,    MPI_INT};  // Typen der Blöcke im Struct.
+  MPI_Aint array_of_displacements[8];    // Offsets der Blöcke im Struct.
   array_of_displacements[0] = offsetof(t_config, alpha);
   array_of_displacements[1] = offsetof(t_config, adj);
   array_of_displacements[2] = offsetof(t_config, a);
@@ -113,6 +114,7 @@ int main(int argc, char **argv) {
   array_of_displacements[4] = offsetof(t_config, iter);
   array_of_displacements[5] = offsetof(t_config, g);
   array_of_displacements[6] = offsetof(t_config, scenario);
+  array_of_displacements[7] = offsetof(t_config, ostep);
   MPI_Datatype config_type;  // Definition des serialisierten Typen
   MPI_Type_create_struct(count, array_of_blocklengths, array_of_displacements,
                          array_of_types, &config_type);
@@ -129,7 +131,8 @@ int main(int argc, char **argv) {
   // Rand 0 liest die Inputdatei und veteilt die Konfiguration an alle Prozesse.
   if (rank == 0) {
     readInputFile(&config.size, &config.iter, &config.g, &config.adj,
-                  &config.alpha, &config.a, &config.scenario, ifilename);
+                  &config.alpha, &config.a, &config.scenario, &config.ostep,
+                  ifilename);
   }
   MPI_Bcast(&config, 1, config_type, 0, MPI_COMM_WORLD);
 
@@ -142,6 +145,7 @@ int main(int argc, char **argv) {
   double adj;
   double a;
   int scenario;
+  int ostep;
 
   size = config.size;
   iter = config.iter;
@@ -150,6 +154,7 @@ int main(int argc, char **argv) {
   adj = config.adj;
   a = config.a;
   scenario = config.scenario;
+  ostep = config.ostep;
 
   double h = a / size;                    // Zellenbreite
   double dt = adj * h * h / 4.0 / alpha;  // Zeitschritt
@@ -207,6 +212,7 @@ int main(int argc, char **argv) {
   } else if (scenario == 2) {
     initRightHot(u1, size, bheight, bwidth, imin, jmin, g);
   }
+  memcpy(u2, u1, mem);
   /*
   else {
     initFromImage(u1, size, bheight, bwidth, imin, jmin, g, scenario);
@@ -253,7 +259,6 @@ int main(int argc, char **argv) {
   double t1 = MPI_Wtime();
   double time_spent_comm = 0.0;
 
-  // TODO: MPI_PROC_NULL mit if-Abfragen
   int n_w = bi * num_blocks_per_row + bj - 1;
   int n_e = bi * num_blocks_per_row + bj + 1;
   int n_n = (bi - 1) * num_blocks_per_row + bj;
@@ -379,6 +384,12 @@ int main(int argc, char **argv) {
         }
       }
       swap(&u1, &u2);
+
+      if (((l * g) + k) % ostep == 0) {
+        char oname[256];
+        sprintf(oname, "%s%d", ofilename, ((l * g) + k));
+        printPPMP6MPI(u1, size, bwidth, bheight, imin, jmin, g, oname, rank);
+      }
     }
     t += dt;
   }
