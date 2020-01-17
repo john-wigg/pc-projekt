@@ -138,6 +138,7 @@ int main(int argc, char **argv) {
 
   MPI_Type_free(&config_type);  // Typen löschen.
 
+  // Lies Parameter aus dem Struct.
   int size;
   int iter;
   int g;
@@ -225,16 +226,18 @@ int main(int argc, char **argv) {
   double adjstep = alpha * adj * 0.25;
 
   // Iteration im Block.
-  MPI_Request req;
-  MPI_Request req_recv[8];
-  double *recvbuf[8];
-  double *sendbuf[8];
+  MPI_Request req;          // Dummy für Sende-Requests
+  MPI_Request req_recv[8];  // Empfangs-Requests
+  double *recvbuf[8];       // Array der Empfangsbuffer
+  double *sendbuf[8];       // Array der Sendebuffer
 
+  // Speichergrößen der horizontalen, vertikalen und an den Ecken gelegenen
+  // Buffer.
   const int mem_h = g * (bwidth - 2 * g) * sizeof(double);
   const int mem_v = g * (bheight - 2 * g) * sizeof(double);
   const int mem_e = g * g * sizeof(double);
 
-  // Sendebuffer.
+  // Reservieren der Sendebuffer.
   sendbuf[T_SEND_N] = (double *)malloc(mem_h);
   sendbuf[T_SEND_S] = (double *)malloc(mem_h);
   sendbuf[T_SEND_E] = (double *)malloc(mem_v);
@@ -244,7 +247,7 @@ int main(int argc, char **argv) {
   sendbuf[T_SEND_SW] = (double *)malloc(mem_e);
   sendbuf[T_SEND_SE] = (double *)malloc(mem_e);
 
-  // Empfangsbuffer.
+  // Reservieren der Empfangsbuffer.
   recvbuf[T_SEND_N] = (double *)malloc(mem_h);
   recvbuf[T_SEND_S] = (double *)malloc(mem_h);
   recvbuf[T_SEND_E] = (double *)malloc(mem_v);
@@ -253,8 +256,6 @@ int main(int argc, char **argv) {
   recvbuf[T_SEND_NE] = (double *)malloc(mem_e);
   recvbuf[T_SEND_SW] = (double *)malloc(mem_e);
   recvbuf[T_SEND_SE] = (double *)malloc(mem_e);
-
-  int l, k, i, j;
 
   double t1 = MPI_Wtime();
   double time_spent_comm = 0.0;
@@ -289,6 +290,8 @@ int main(int argc, char **argv) {
     n_se = MPI_PROC_NULL;
   }
 
+  // Äußere Schleife für die Kommunikationsschritte.
+  int l;
   for (l = 0; l < iter / g; l++) {
     double t1comm = MPI_Wtime();
 
@@ -368,12 +371,18 @@ int main(int argc, char **argv) {
     // Warte, bis alle Daten angekommen sind.
     MPI_Waitall(8, req_recv, MPI_STATUS_IGNORE);
 
+    // Bestimme die Zeit, die in diesem Kommunikationsschritt benötigt wurde.
     double t2comm = MPI_Wtime();
     time_spent_comm += t2comm - t1comm;
 
+    // Innere Schleife für die Iterationsschritte zwischen den
+    // Kommunikationsschritten.
+    int k;
     for (k = 0; k < g; k++) {
       // Der zu aktualisierende Bereich schrumpft nach jedem Zeitschritt um 1.
+      int i;
       for (i = 1 + k; i < bheight - 1 - k; i++) {
+        int j;
         for (j = 1 + k; j < bwidth - 1 - k; j++) {
           // Randbereiche mit Dicke g sollen nicht mit aktualisiert werden.
           // TODO: if-Abfragen entfernen
@@ -395,27 +404,34 @@ int main(int argc, char **argv) {
   }
 
   // Sende- und Empfangsbuffer bereinigen.
+  int i;
   for (i = 0; i < 8; i++) {
     free(sendbuf[i]);
     free(recvbuf[i]);
   }
 
+  // Bestimme die Zeit, welche für die gesamte Simulation pro Iterationsschritt
+  // benötigt wurde.
   double t2 = MPI_Wtime();
   double time_per_step = (t2 - t1) / iter;
-  // Normalisiere benötigte Kommunikationszeit auf Iterationsanzahl
+  // Normalisiere benötigte Kommunikationszeit auf Iterationsanzahl.
   time_spent_comm /= iter;
 
+  // Ausgabe der Zeiten.
   if (rank == 0) {
-    printf("Benötigte Zeit pro Iterationsschritt: %f\n", time_per_step);
+    printf("Durchschn. benötigte Zeit pro Iterationsschritt: %f\n",
+           time_per_step);
     printf(
-        "Für Kommunikation benötigte Zeit pro Iterationsschritt: %f (%f %%)\n",
+        "Durchschn. für Kommunikation benötigte Zeit pro Iterationsschritt: %f "
+        "(%f %%)\n",
         time_spent_comm, time_spent_comm / time_per_step * 100);
   }
 
+  // Schreibe Ergebnis der Simulation in die Ausgabedatei.
   if (rank == 0) printf("Schreibe in Datei...\n");
-
   printPPM(u1, size, bwidth, bheight, imin, jmin, g, ofilename, rank);
 
+  // Bereinigen der Gitterblockbuffer.
   free(u1);
   free(u2);
 
