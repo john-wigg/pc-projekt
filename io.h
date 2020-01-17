@@ -9,31 +9,9 @@
 #define IO_H_
 
 /**
- * @brief Ausgabe des Gitters als ASCII-kodierte Portable Pix Map (PPM).
- *
- * Schreibt das Gitter t als ASCII-kodierte PPM in die Datei filename.
- *
- * @param t Gitter.
- * @param size Anzahl Gitterpunkte in eine Richtung.
- * @param filename Dateiname der PPM.
- */
-void printPPMP3(double *t, int size, const char *filename);
-
-/**
- * @brief Ausgabe des Gitters als binärkodierte Portable Pix Map (PPM).
- *
- * Schreibt das Gitter t als binärkodierte PPM in die Datei filename.
- *
- * @param t Gitter.
- * @param size Anzahl Gitterpunkte in eine Richtung.
- * @param filename Dateiname der PPM.
- */
-void printPPMP6(double *t, int size, const char *filename);
-
-/**
  * @brief Liest die Parameter für die Simulation aus einer Datei ein.
  *
- * @param size Anzahl Gitterpunkte in eine Richtung.
+ * @param size Höhe/Breite des Gitters.
  * @param iter Anzahl Iterationen.
  * @param g Breite der Überschneidungsbereiche.
  * @param adj Sicherheitsfaktor des Zeitschrittes (<1.0 für stabiles
@@ -47,7 +25,26 @@ void printPPMP6(double *t, int size, const char *filename);
 void readInputFile(int *size, int *iter, int *g, double *adj, double *alpha,
                    double *a, int *scenario, int *ostep, const char *filename);
 
-void printPPMP6MPI(double *t, int size, int bwidth, int bheight, int imin,
-                   int jmin, int g, const char *filename, int rank);
+/**
+ * @brief Parallele Ausgabe eines Gitters als binärkodierte Portable Pixmap (PPM
+ * P6).
+ *
+ * Schreibt des Gitterblock des Prozesses parallel in eine Outputdatei unter
+ * Verwendung von MPI_File_write_at. Falls der Rang des Prozesses 0 ist, wird
+ * zudem der Header geschrieben.
+ *
+ * @param t Gitter.
+ * @param size Höhe/Breite des Gitters.
+ * @param bwidth Breite des Gitterblocks.
+ * @param bheight Höhe des Gitterblocks.
+ * @param imin Index i der oberen linken Zelle des Gitterblocks.
+ * @param jmin Index j der oberen linken Zelle des Gitterblocks.
+ * @param g Breite der Geisterzonen.
+ * @param filename Name der Output-Datei.
+ * @param rank Rang des Prozesses, auf dem der Gitterblock liegt.
+ */
+
+void printPPM(double *t, int size, int bwidth, int bheight, int imin, int jmin,
+              int g, const char *filename, int rank);
 
 #endif  // IO_H_

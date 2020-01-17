@@ -414,7 +414,7 @@ int main(int argc, char **argv) {
 
   if (rank == 0) printf("Schreibe in Datei...\n");
 
-  printPPMP6MPI(u1, size, bwidth, bheight, imin, jmin, g, ofilename, rank);
+  printPPM(u1, size, bwidth, bheight, imin, jmin, g, ofilename, rank);
 
   free(u1);
   free(u2);

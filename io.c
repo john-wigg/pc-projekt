@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-void printPPMP3(double *t, int size, const char *filename) {
+void printPPM(double *t, int size, const char *filename) {
   FILE *f = fopen(filename, "w");
   fprintf(f, "P3\n%i %i\n255\n", size, size);
   double tmax = 25.0;
