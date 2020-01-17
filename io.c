@@ -23,8 +23,10 @@ void printPPM(double *t, int size, int bwidth, int bheight, int imin, int jmin,
   __uint8_t *rgb;
   rgb = (__uint8_t *)malloc((bwidth - 2 * g) * 3 * sizeof(__uint8_t));
 
-  for (int i = g; i < bheight - g; i++) {
-    for (int j = g; j < bwidth - g; j++) {
+  int i;
+  for (i = g; i < bheight - g; i++) {
+    int j;
+    for (j = g; j < bwidth - g; j++) {
       double val = t[j + i * bwidth];
       int off = 3 * (j - g);  // local offset
       rgb[0 + off] = 0;
