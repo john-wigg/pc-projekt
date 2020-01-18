@@ -11,7 +11,7 @@ void printPPM(double *t, int size, int bwidth, int bheight, int imin, int jmin,
   sprintf(header, "P6\n%i %i\n255\n", size, size);
   int header_len = strlen(header);
   MPI_File fh;
-  MPI_File_open(MPI_COMM_WORLD, filename, MPI_MODE_CREATE | MPI_MODE_WRONLY,
+  MPI_File_open(MPI_COMM_SELF, filename, MPI_MODE_CREATE | MPI_MODE_WRONLY,
                 MPI_INFO_NULL, &fh);
 
   if (rank == 0) {
