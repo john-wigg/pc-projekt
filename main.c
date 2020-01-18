@@ -305,7 +305,6 @@ int main(int argc, char **argv) {
               T_SEND_N, MPI_COMM_WORLD, &req);
     MPI_Irecv(recvbuf[T_SEND_N], g * (bwidth - 2 * g), MPI_DOUBLE, n_n,
               T_SEND_S, MPI_COMM_WORLD, &req_recv[T_SEND_N]);
-    readRecvBuf(recvbuf[T_SEND_N], u1, bwidth, bwidth - 2 * g, g, 0, g);
 
     // Nordwestliche Ecke.
     writeSendBuf(sendbuf[T_SEND_NW], u1, bwidth, g, g, g, g);
@@ -313,7 +312,6 @@ int main(int argc, char **argv) {
               MPI_COMM_WORLD, &req);
     MPI_Irecv(recvbuf[T_SEND_NW], g * g, MPI_DOUBLE, n_nw, T_SEND_SE,
               MPI_COMM_WORLD, &req_recv[T_SEND_NW]);
-    readRecvBuf(recvbuf[T_SEND_NW], u1, bwidth, g, g, 0, 0);
 
     // Nordöstliche Ecke.
     writeSendBuf(sendbuf[T_SEND_NE], u1, bwidth, g, g, g, bwidth - 2 * g);
@@ -321,7 +319,6 @@ int main(int argc, char **argv) {
               MPI_COMM_WORLD, &req);
     MPI_Irecv(recvbuf[T_SEND_NE], g * g, MPI_DOUBLE, n_ne, T_SEND_SW,
               MPI_COMM_WORLD, &req_recv[T_SEND_NE]);
-    readRecvBuf(recvbuf[T_SEND_NE], u1, bwidth, g, g, 0, bwidth - g);
 
     // Unteren Rand nach unten senden und oberen Rand von unten empfangen
     writeSendBuf(sendbuf[T_SEND_S], u1, bwidth, bwidth - 2 * g, g,
@@ -330,8 +327,6 @@ int main(int argc, char **argv) {
               T_SEND_S, MPI_COMM_WORLD, &req);
     MPI_Irecv(recvbuf[T_SEND_S], g * (bwidth - 2 * g), MPI_DOUBLE, n_s,
               T_SEND_N, MPI_COMM_WORLD, &req_recv[T_SEND_S]);
-    readRecvBuf(recvbuf[T_SEND_S], u1, bwidth, bwidth - 2 * g, g, bheight - g,
-                g);
 
     // Südwestliche Ecke.
     writeSendBuf(sendbuf[T_SEND_SW], u1, bwidth, g, g, bheight - 2 * g, g);
@@ -339,7 +334,6 @@ int main(int argc, char **argv) {
               MPI_COMM_WORLD, &req);
     MPI_Irecv(recvbuf[T_SEND_SW], g * g, MPI_DOUBLE, n_sw, T_SEND_NE,
               MPI_COMM_WORLD, &req_recv[T_SEND_SW]);
-    readRecvBuf(recvbuf[T_SEND_SW], u1, bwidth, g, g, bheight - g, 0);
 
     // Südöstliche Ecke.
     writeSendBuf(sendbuf[T_SEND_SE], u1, bwidth, g, g, bheight - 2 * g,
@@ -348,7 +342,6 @@ int main(int argc, char **argv) {
               MPI_COMM_WORLD, &req);
     MPI_Irecv(recvbuf[T_SEND_SE], g * g, MPI_DOUBLE, n_se, T_SEND_NW,
               MPI_COMM_WORLD, &req_recv[T_SEND_SE]);
-    readRecvBuf(recvbuf[T_SEND_SE], u1, bwidth, g, g, bheight - g, bwidth - g);
 
     // Linken Rand nach links senden und rechten Rand von links empfangen.
     writeSendBuf(sendbuf[T_SEND_W], u1, bwidth, g, bheight - 2 * g, g, g);
@@ -356,7 +349,6 @@ int main(int argc, char **argv) {
               T_SEND_W, MPI_COMM_WORLD, &req);
     MPI_Irecv(recvbuf[T_SEND_W], g * (bheight - 2 * g), MPI_DOUBLE, n_w,
               T_SEND_E, MPI_COMM_WORLD, &req_recv[T_SEND_W]);
-    readRecvBuf(recvbuf[T_SEND_W], u1, bwidth, g, bheight - 2 * g, g, 0);
 
     // Rechten Rand nach Rechts senden und linken Rand von rechts empfangen.
     writeSendBuf(sendbuf[T_SEND_E], u1, bwidth, g, bheight - 2 * g, g,
@@ -365,11 +357,19 @@ int main(int argc, char **argv) {
               T_SEND_E, MPI_COMM_WORLD, &req);
     MPI_Irecv(recvbuf[T_SEND_E], g * (bheight - 2 * g), MPI_DOUBLE, n_e,
               T_SEND_W, MPI_COMM_WORLD, &req_recv[T_SEND_E]);
-    readRecvBuf(recvbuf[T_SEND_E], u1, bwidth, g, bheight - 2 * g, g,
-                bwidth - g);
 
     // Warte, bis alle Daten angekommen sind.
     MPI_Waitall(8, req_recv, MPI_STATUS_IGNORE);
+    readRecvBuf(recvbuf[T_SEND_N], u1, bwidth, bwidth - 2 * g, g, 0, g);
+    readRecvBuf(recvbuf[T_SEND_NW], u1, bwidth, g, g, 0, 0);
+    readRecvBuf(recvbuf[T_SEND_NE], u1, bwidth, g, g, 0, bwidth - g);
+    readRecvBuf(recvbuf[T_SEND_S], u1, bwidth, bwidth - 2 * g, g, bheight - g,
+                g);
+    readRecvBuf(recvbuf[T_SEND_SW], u1, bwidth, g, g, bheight - g, 0);
+    readRecvBuf(recvbuf[T_SEND_SE], u1, bwidth, g, g, bheight - g, bwidth - g);
+    readRecvBuf(recvbuf[T_SEND_W], u1, bwidth, g, bheight - 2 * g, g, 0);
+    readRecvBuf(recvbuf[T_SEND_E], u1, bwidth, g, bheight - 2 * g, g,
+                bwidth - g);
 
     // Bestimme die Zeit, die in diesem Kommunikationsschritt benötigt wurde.
     double t2comm = MPI_Wtime();
