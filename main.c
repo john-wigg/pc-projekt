@@ -177,6 +177,21 @@ int main(int argc, char **argv) {
   double dt = adj * h * h / 4.0 / alpha;  // Zeitschritt
   double t = 0.0;                         // Zeit
 
+  if (rank == 0) {
+    printf("Simulationsparamter\n");
+    printf("------------------------------------\n");
+    printf("Gittergröße: %d\n", size);
+    printf("Iterationen: %d\n", iter);
+    printf("Breite d. Geisterzonen: %d\n", g);
+    printf("\nPhysikalische Größen\n");
+    printf("------------------------------------\n");
+    printf("Therm. Diffusivität: %f\n", alpha);
+    printf("Seitenlänge des Gitters: %f\n", a);
+    printf("Gitterzellengröße: %e\n", h);
+    printf("Sicherheitsfaktor für den Zeitschritt: %f\n", adj);
+    printf("Zeitschritt: %e\n\n", dt);
+  }
+
   // Speicherbereiche für das 2D-Gitter des Blockes.
   double *u1, *u2;
 
@@ -426,6 +441,8 @@ int main(int argc, char **argv) {
 
   // Ausgabe der Zeiten.
   if (rank == 0) {
+    printf("\nZeitmessung auf Rang 0\n");
+    printf("----------------------------------\n");
     printf("Durchschn. benötigte Zeit pro Iterationsschritt: %f\n",
            time_per_step);
     printf(
