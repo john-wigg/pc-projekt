@@ -5,8 +5,10 @@
 
 void initTopLeftHotBotRightCold(double *t, int size, int bheight, int bwidth,
                                 int imin, int jmin, int g) {
-  for (int i = g; i < bheight - g; i++) {
-    for (int j = g; j < bwidth - g; j++) {
+  int i;
+  for (i = g; i < bheight - g; i++) {
+    int j;
+    for (j = g; j < bwidth - g; j++) {
       t[i * bwidth + j] = 0.0;
       if (jmin + j - g == 0) t[i * bwidth + j] = 25.0;
       if (jmin + j - g == size - 1) t[i * bwidth + j] = -25.0;
@@ -18,8 +20,10 @@ void initTopLeftHotBotRightCold(double *t, int size, int bheight, int bwidth,
 
 void initHotSpot(double *t, int size, int bheight, int bwidth, int imin,
                  int jmin, int g) {
-  for (int i = g; i < bheight - g; i++) {
-    for (int j = g; j < bwidth - g; j++) {
+  int i;
+  for (i = g; i < bheight - g; i++) {
+    int j;
+    for (j = g; j < bwidth - g; j++) {
       t[i * bwidth + j] = 0.0;
       int distX = (jmin + j - g - size / 2);
       int distY = (imin + i - g - size / 2);
@@ -33,8 +37,10 @@ void initHotSpot(double *t, int size, int bheight, int bwidth, int imin,
 
 void initRightHot(double *t, int size, int bheight, int bwidth, int imin,
                   int jmin, int g) {
-  for (int i = g; i < bheight - g; i++) {
-    for (int j = g; j < bwidth - g; j++) {
+  int i;
+  for (i = g; i < bheight - g; i++) {
+    int j;
+    for (j = g; j < bwidth - g; j++) {
       t[i * bwidth + j] = 0.0;
       if (jmin + j - g == size - 1) t[i * bwidth + j] = 25.0;
     }
@@ -70,8 +76,10 @@ void initFromImage(double *t, int size, int bheight, int bwidth, int imin,
       fread(&val, 1, 1, f);
       fread(&val, 1, 1, f);
       fread(&val, 1, 1, f);  // Nur B-Channel wird gelesen
-      for (int il = 0; il < spacing; il++) {
-        for (int jl = 0; jl < spacing; jl++) {
+      int il;
+      for (il = 0; il < spacing; il++) {
+        int jl;
+        for (jl = 0; jl < spacing; jl++) {
           int ib = i * spacing + il - imin + g;
           int jb = j * spacing + jl - jmin + g;
           if (jb >= g && jb < bwidth - g && ib >= g && ib < bheight - g)
