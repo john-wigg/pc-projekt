@@ -15,7 +15,7 @@ void printPPM(double *t, int size, int bwidth, int bheight, int imin, int jmin,
                 MPI_INFO_NULL, &fh);
 
   if (rank == 0) {
-    MPI_File_write_at(fh, 0, header, header_len, MPI_BYTE, MPI_STATUS_IGNORE);
+    MPI_File_write_at(fh, 0, header, header_len, MPI_CHAR, MPI_STATUS_IGNORE);
   }
 
   double tmax = 25.0;
