@@ -121,9 +121,25 @@ int main(int argc, char **argv) {
   MPI_Type_commit(&config_type);  // Typen committen.
 
   // Übergabeparameter für [size iter g filename] einlesen
-  if (argc != 3 || !sscanf(argv[1], "%s", ifilename) ||
-      !sscanf(argv[2], "%s", ofilename)) {
-    if (rank == 0) printf("Nutzung: %s <ifile> <ofile>\n", argv[0]);
+  int no_output = 1;  // Soll eine Output-Datei (PPM) generiert werden?
+  if (argc >= 2 && argc <= 3) {
+    if (!sscanf(argv[1], "%s",
+                ifilename)) {  // Dateiname der Inputdatei einlesen
+      if (rank == 0) printf("Nutzung: %s <ifile> [ofile]\n", argv[0]);
+      MPI_Finalize();
+      return -1;
+    }
+    // Falls zweites Argument vorhanden, Dateiname der Outputdatei einlesen.
+    if (argc == 3) {
+      if (!sscanf(argv[2], "%s", ofilename)) {
+        if (rank == 0) printf("Nutzung: %s <ifile> [ofile]\n", argv[0]);
+        MPI_Finalize();
+        return -1;
+      }
+      no_output = 0;
+    }
+  } else {  // Anzahl der Argumente stimmt nicht
+    if (rank == 0) printf("Nutzung: %s <ifile> [ofile]\n", argv[0]);
     MPI_Finalize();
     return -1;
   }
@@ -387,7 +403,8 @@ int main(int argc, char **argv) {
       if (ostep > 0 && ((l * g) + k) % ostep == 0) {
         char oname[256];
         sprintf(oname, "%s%d", ofilename, ((l * g) + k));
-        printPPM(u1, size, bwidth, bheight, imin, jmin, g, oname, rank);
+        if (!no_output)
+          printPPM(u1, size, bwidth, bheight, imin, jmin, g, oname, rank);
       }
     }
     t += dt;
@@ -418,8 +435,10 @@ int main(int argc, char **argv) {
   }
 
   // Schreibe Ergebnis der Simulation in die Ausgabedatei.
-  if (rank == 0) printf("Schreibe in Datei...\n");
-  printPPM(u1, size, bwidth, bheight, imin, jmin, g, ofilename, rank);
+  if (!no_output) {
+    if (rank == 0) printf("Schreibe in Datei...\n");
+    printPPM(u1, size, bwidth, bheight, imin, jmin, g, ofilename, rank);
+  }
 
   // Bereinigen der Gitterblockbuffer.
   free(u1);
