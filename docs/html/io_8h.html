@@ -1,0 +1,274 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.8.13"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Wärmeleitung auf einem 2D-Gitter: io.h-Dateireferenz</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr style="height: 56px;">
+  <td id="projectalign" style="padding-left: 0.5em;">
+   <div id="projectname">Wärmeleitung auf einem 2D-Gitter
+   </div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Erzeugt von Doxygen 1.8.13 -->
+<script type="text/javascript">
+var searchBox = new SearchBox("searchBox", "search",false,'Suchen');
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+$(function() {
+  initMenu('',true,false,'search.php','Suchen');
+  $(document).ready(function() { init_search(); });
+});
+</script>
+<div id="main-nav"></div>
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<iframe src="javascript:void(0)" frameborder="0" 
+        name="MSearchResults" id="MSearchResults">
+</iframe>
+</div>
+
+</div><!-- top -->
+<div class="header">
+  <div class="summary">
+<a href="#func-members">Funktionen</a>  </div>
+  <div class="headertitle">
+<div class="title">io.h-Dateireferenz</div>  </div>
+</div><!--header-->
+<div class="contents">
+
+<p>Methoden für Input und Output.  
+<a href="#details">Mehr ...</a></p>
+<div class="textblock"><div class="dynheader">
+Dieser Graph zeigt, welche Datei direkt oder indirekt diese Datei enthält:</div>
+<div class="dyncontent">
+<div class="center"><img src="io_8h__dep__incl.png" border="0" usemap="#io_8hdep" alt=""/></div>
+<map name="io_8hdep" id="io_8hdep">
+</map>
+</div>
+</div>
+<p><a href="io_8h_source.html">gehe zum Quellcode dieser Datei</a></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
+Funktionen</h2></td></tr>
+<tr class="memitem:a03798281ce0e62e2f8b1103e3a369945"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="io_8h.html#a03798281ce0e62e2f8b1103e3a369945">readInputFile</a> (int *size, int *iter, int *g, double *adj, double *alpha, double *a, int *scenario, int *ostep, const char *filename)</td></tr>
+<tr class="memdesc:a03798281ce0e62e2f8b1103e3a369945"><td class="mdescLeft">&#160;</td><td class="mdescRight">Liest die Parameter für die Simulation aus einer Datei ein.  <a href="#a03798281ce0e62e2f8b1103e3a369945">Mehr ...</a><br /></td></tr>
+<tr class="separator:a03798281ce0e62e2f8b1103e3a369945"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7ab311e346fcd326a984be176e0fc299"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="io_8h.html#a7ab311e346fcd326a984be176e0fc299">printPPM</a> (double *t, int size, int bwidth, int bheight, int imin, int jmin, int g, const char *filename, int rank)</td></tr>
+<tr class="memdesc:a7ab311e346fcd326a984be176e0fc299"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parallele Ausgabe eines Gitters als binärkodierte Portable Pixmap (PPM P6).  <a href="#a7ab311e346fcd326a984be176e0fc299">Mehr ...</a><br /></td></tr>
+<tr class="separator:a7ab311e346fcd326a984be176e0fc299"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">Ausführliche Beschreibung</h2>
+<div class="textblock"><p>Methoden für Input und Output. </p>
+<dl class="section author"><dt>Autor</dt><dd>Wigg, Seidler </dd></dl>
+<dl class="section date"><dt>Datum</dt><dd>29 December 2019 </dd></dl>
+</div><h2 class="groupheader">Dokumentation der Funktionen</h2>
+<a id="a7ab311e346fcd326a984be176e0fc299"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7ab311e346fcd326a984be176e0fc299">&#9670;&nbsp;</a></span>printPPM()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void printPPM </td>
+          <td>(</td>
+          <td class="paramtype">double *&#160;</td>
+          <td class="paramname"><em>t</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>size</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>bwidth</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>bheight</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>imin</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>jmin</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>g</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>filename</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>rank</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Parallele Ausgabe eines Gitters als binärkodierte Portable Pixmap (PPM P6). </p>
+<p>Schreibt des Gitterblock des Prozesses parallel in eine Outputdatei unter Verwendung von MPI_File_write_at. Falls der Rang des Prozesses 0 ist, wird zudem der Header geschrieben.</p>
+<dl class="params"><dt>Parameter</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">t</td><td>Gitter. </td></tr>
+    <tr><td class="paramname">size</td><td>Höhe/Breite des Gitters. </td></tr>
+    <tr><td class="paramname">bwidth</td><td>Breite des Gitterblocks. </td></tr>
+    <tr><td class="paramname">bheight</td><td>Höhe des Gitterblocks. </td></tr>
+    <tr><td class="paramname">imin</td><td>Index i der oberen linken Zelle des Gitterblocks. </td></tr>
+    <tr><td class="paramname">jmin</td><td>Index j der oberen linken Zelle des Gitterblocks. </td></tr>
+    <tr><td class="paramname">g</td><td>Breite der Geisterzonen. </td></tr>
+    <tr><td class="paramname">filename</td><td>Name der Output-Datei. </td></tr>
+    <tr><td class="paramname">rank</td><td>Rang des Prozesses, auf dem der Gitterblock liegt. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a03798281ce0e62e2f8b1103e3a369945"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a03798281ce0e62e2f8b1103e3a369945">&#9670;&nbsp;</a></span>readInputFile()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void readInputFile </td>
+          <td>(</td>
+          <td class="paramtype">int *&#160;</td>
+          <td class="paramname"><em>size</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int *&#160;</td>
+          <td class="paramname"><em>iter</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int *&#160;</td>
+          <td class="paramname"><em>g</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double *&#160;</td>
+          <td class="paramname"><em>adj</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double *&#160;</td>
+          <td class="paramname"><em>alpha</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double *&#160;</td>
+          <td class="paramname"><em>a</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int *&#160;</td>
+          <td class="paramname"><em>scenario</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int *&#160;</td>
+          <td class="paramname"><em>ostep</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>filename</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Liest die Parameter für die Simulation aus einer Datei ein. </p>
+<dl class="params"><dt>Parameter</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">size</td><td>Höhe/Breite des Gitters. </td></tr>
+    <tr><td class="paramname">iter</td><td>Anzahl Iterationen. </td></tr>
+    <tr><td class="paramname">g</td><td>Breite der Überschneidungsbereiche. </td></tr>
+    <tr><td class="paramname">adj</td><td>Sicherheitsfaktor des Zeitschrittes (&lt;1.0 für stabiles Euler-Verfahren) </td></tr>
+    <tr><td class="paramname">alpha</td><td>Thermische Diffusivität. </td></tr>
+    <tr><td class="paramname">a</td><td>Seitenlänge des Gitters. </td></tr>
+    <tr><td class="paramname">scenario</td><td>Simulationsszenario. Mögliche Werte: TOPLEFTHOTBOTRIGHTCOLD, RIGHTHOT, HOTSPOT, oder Dateiname um eine PPM-Datei einzulesen. </td></tr>
+    <tr><td class="paramname">filename</td><td>Dateiname der Inputdatei. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+</div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+Erzeugt von &#160;<a href="http://www.doxygen.org/index.html">
+<img class="footer" src="doxygen.png" alt="doxygen"/>
+</a> 1.8.13
+</small></address>
+</body>
+</html>
