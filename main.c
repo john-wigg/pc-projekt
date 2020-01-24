@@ -242,11 +242,6 @@ int main(int argc, char **argv) {
     initRightHot(u1, size, bheight, bwidth, imin, jmin, g);
   }
   memcpy(u2, u1, mem);
-  /*
-  else {
-    initFromImage(u1, size, bheight, bwidth, imin, jmin, g, scenario);
-  }
-  */
 
   // Berechne Schwrittweite.
   // adj ist dabei ein Sicherheitsfaktor, der für ein stabiles Verfahren <= 1.0
