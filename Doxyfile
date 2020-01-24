@@ -1,4 +1,4 @@
 PROJECT_NAME = "Wärmeleitung auf einem 2D-Gitter"
-OUTPUT_DIRECTORY = docs
+HTML_OUTPUT = docs
 OUTPUT_LANGUAGE = German
 GENERATE_LATEX = No
