@@ -37,16 +37,4 @@ void initHotSpot(double *t, int size, int bheight, int bwidth, int imin,
 void initRightHot(double *t, int size, int bheight, int bwidth, int imin,
                   int jmin, int g);
 
-/**
- * @brief Initialisiert einen Gitterblock mti den Pixelwerten aus einer
- * binärkodierten PPM-Datei.
- *
- * Nur der blaue Farbkanal wird gelesen.
- * Siehe initTopLeftHotBotRightCold() für Parameterliste.
- *
- * @param filename Dateiname.
- */
-void initFromImage(double *t, int size, int bheight, int bwidth, int imin,
-                   int jmin, int g, char *filename);
-
 #endif  // SCENARIOS_H_
