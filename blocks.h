@@ -32,7 +32,12 @@ enum {
  * @param t1 Pointer zum ersten Gitterblock.
  * @param t2 Pointer zum zweiten Gitterblokc.
  */
-void swap(double **t1, double **t2);
+static inline void swap(double **t1, double **t2) {
+  double *temp;
+  temp = *t2;
+  *t2 = *t1;
+  *t1 = temp;
+}
 
 /**
  * @brief Aktualisiert einen Gitterpunkt.
@@ -47,7 +52,13 @@ void swap(double **t1, double **t2);
  * @param adjstep Angepasste Schrittweite des Euler-Schritts: \f$\alpha
  * \frac{\Delta t}{h^2}\f$.
  */
-void updatePoint(double *t1, double *t2, int i, int j, double adjstep,
-                 int size);
+static inline void updatePoint(double *t1, double *t2, int i, int j,
+                               double adjstep, int size) {
+  t2[i * size + j] =
+      t1[i * size + j] +
+      adjstep * (t1[(i + 1) * size + j] + t1[(i - 1) * size + j] +
+                 t1[i * size + (j + 1)] + t1[i * size + (j - 1)] -
+                 4 * t1[i * size + j]);
+}
 
 #endif  // BLOCKS_H_
