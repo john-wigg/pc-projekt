@@ -1,7 +1,7 @@
 pages:
   script:
-  - gem install jekyll
-  - jekyll build -d docs/html
+  - bundle install
+  - bundle exec jekyll build -d docs/html
   artifacts:
     paths:
     - public
