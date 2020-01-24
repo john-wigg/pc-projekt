@@ -16,18 +16,17 @@
 #include "scenarios.h"
 
 /**
- * @brief Enthält die Konfiguration für die Simulation
+ * @brief Enthält die Konfiguration für die Simulationsparameter
  */
 typedef struct config_s {
   double alpha;  //!< thermische Diffusitivität
-  double adj;    //!< Sicherheitsfaktor für den Zeitschritt (<1.0 für stabile
-                 //!< Simulation)
-  double a;      //<! Seitenlänge des Gitters
-  int size;      //<! Zellen pro Gitterseite
-  int iter;      //<! Maximale Iterationsschritte
-  int g;         //<! Breite der Geisterzonen in Zellen
-  int scenario;  //<! Gewähltes Szeneria, d.h. Anfangs- und Randbedingungen
-  int ostep;     //<! Schrittabstand für Zwischenausgabe
+  double adj;    //!< Sicherheitsfaktor für den Zeitschritt
+  double a;      //!< Seitenlänge des Gitters
+  int size;      //!< Zellen pro Gitterseite
+  int iter;      //!< Maximale Iterationsschritte
+  int g;         //!< Breite der Geisterzonen in Zellen
+  int scenario;  //!< Gewähltes Szeneria, d.h. Anfangs- und Randbedingungen
+  int ostep;     //!< Schrittabstand für Zwischenausgabe
 } t_config;
 
 /**
