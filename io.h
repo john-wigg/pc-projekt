@@ -20,6 +20,7 @@
  * @param a Seitenlänge des Gitters.
  * @param scenario Simulationsszenario. Mögliche Werte: TOPLEFTHOTBOTRIGHTCOLD,
  * RIGHTHOT, HOTSPOT, oder Dateiname um eine PPM-Datei einzulesen.
+ * @param ostep Schrittabstand für die Zwischenausgabe
  * @param filename Dateiname der Inputdatei.
  */
 void readInputFile(int *size, int *iter, int *g, double *adj, double *alpha,
