@@ -182,8 +182,6 @@ int main(int argc, char **argv) {
     printf("Gittergröße: %d\n", size);
     printf("Iterationen: %d\n", iter);
     printf("Breite d. Geisterzonen: %d\n", g);
-    printf("\nPhysikalische Größen\n");
-    printf("------------------------------------\n");
     printf("Therm. Diffusivität: %f\n", alpha);
     printf("Seitenlänge des Gitters: %f\n", a);
     printf("Gitterzellengröße: %e\n", h);
