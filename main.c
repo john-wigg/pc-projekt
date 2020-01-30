@@ -280,9 +280,7 @@ int main(int argc, char **argv) {
   recvbuf[T_SEND_SW] = (double *)malloc(mem_e);
   recvbuf[T_SEND_SE] = (double *)malloc(mem_e);
 
-  double t1 = MPI_Wtime();
-  double time_spent_comm = 0.0;
-
+  // Ränge der benachbarten Blöcke.
   int n_w = bi * num_blocks_per_row + bj - 1;
   int n_e = bi * num_blocks_per_row + bj + 1;
   int n_n = (bi - 1) * num_blocks_per_row + bj;
@@ -312,6 +310,10 @@ int main(int argc, char **argv) {
     n_ne = MPI_PROC_NULL;
     n_se = MPI_PROC_NULL;
   }
+
+  // Zeitmessung starten.
+  double t1 = MPI_Wtime();
+  double time_spent_comm = 0.0;
 
   // Äußere Schleife für die Kommunikationsschritte.
   int l;
@@ -398,15 +400,16 @@ int main(int argc, char **argv) {
         int j;
         for (j = 1 + k; j < bwidth - 1 - k; j++) {
           // Randbereiche mit Dicke g sollen nicht mit aktualisiert werden.
-          // TODO: if-Abfragen entfernen
           if (imin + i - g <= 0 || imin + i - g >= size - 1 ||
               jmin + j - g <= 0 || jmin + j - g >= size - 1)
             continue;
           updatePoint(u1, u2, i, j, adjstep, bwidth);
         }
       }
+      // Austauschen der Gitter.
       swap(&u1, &u2);
 
+      // Zwischenschrittausgabe.
       if (ostep > 0 && ((l * g) + k) % ostep == 0) {
         char oname[256];
         sprintf(oname, "%s%d", ofilename, ((l * g) + k));
