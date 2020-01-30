@@ -1,0 +1,305 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.8.13"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Wärmeleitung auf einem 2D-Gitter: scenarios.h-Dateireferenz</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    extensions: ["tex2jax.js"],
+    jax: ["input/TeX","output/HTML-CSS"],
+});
+</script><script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr style="height: 56px;">
+  <td id="projectalign" style="padding-left: 0.5em;">
+   <div id="projectname">Wärmeleitung auf einem 2D-Gitter
+   </div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Erzeugt von Doxygen 1.8.13 -->
+<script type="text/javascript">
+var searchBox = new SearchBox("searchBox", "search",false,'Suchen');
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+$(function() {
+  initMenu('',true,false,'search.php','Suchen');
+  $(document).ready(function() { init_search(); });
+});
+</script>
+<div id="main-nav"></div>
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<iframe src="javascript:void(0)" frameborder="0" 
+        name="MSearchResults" id="MSearchResults">
+</iframe>
+</div>
+
+</div><!-- top -->
+<div class="header">
+  <div class="summary">
+<a href="#func-members">Funktionen</a>  </div>
+  <div class="headertitle">
+<div class="title">scenarios.h-Dateireferenz</div>  </div>
+</div><!--header-->
+<div class="contents">
+
+<p>Funktionen zur Initialisierung der Gitterblöcke mit verschiendenen Anfangs-/ Randbedingungen.  
+<a href="#details">Mehr ...</a></p>
+<div class="textblock"><div class="dynheader">
+Dieser Graph zeigt, welche Datei direkt oder indirekt diese Datei enthält:</div>
+<div class="dyncontent">
+<div class="center"><img src="scenarios_8h__dep__incl.png" border="0" usemap="#scenarios_8hdep" alt=""/></div>
+<map name="scenarios_8hdep" id="scenarios_8hdep">
+</map>
+</div>
+</div>
+<p><a href="scenarios_8h_source.html">gehe zum Quellcode dieser Datei</a></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
+Funktionen</h2></td></tr>
+<tr class="memitem:a7036e708b60dbbae601741bd7e3cbbe0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="scenarios_8h.html#a7036e708b60dbbae601741bd7e3cbbe0">initTopLeftHotBotRightCold</a> (double *t, int size, int bheight, int bwidth, int imin, int jmin, int g)</td></tr>
+<tr class="memdesc:a7036e708b60dbbae601741bd7e3cbbe0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialisiert einen Gitterblock mit Randbedingungen.  <a href="#a7036e708b60dbbae601741bd7e3cbbe0">Mehr ...</a><br /></td></tr>
+<tr class="separator:a7036e708b60dbbae601741bd7e3cbbe0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af661b5d73e9741864c94bcbe717e7431"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="scenarios_8h.html#af661b5d73e9741864c94bcbe717e7431">initHotSpot</a> (double *t, int size, int bheight, int bwidth, int imin, int jmin, int g)</td></tr>
+<tr class="memdesc:af661b5d73e9741864c94bcbe717e7431"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialisiert einen Gitterblock mit einem heißen "Fleck" in der Mitte des Feldes.  <a href="#af661b5d73e9741864c94bcbe717e7431">Mehr ...</a><br /></td></tr>
+<tr class="separator:af661b5d73e9741864c94bcbe717e7431"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad7a1305fb2454e10581c2739a9ee339c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="scenarios_8h.html#ad7a1305fb2454e10581c2739a9ee339c">initRightHot</a> (double *t, int size, int bheight, int bwidth, int imin, int jmin, int g)</td></tr>
+<tr class="memdesc:ad7a1305fb2454e10581c2739a9ee339c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialisiert einen Gitterblock mit 25.0 auf dem rechten Rand.  <a href="#ad7a1305fb2454e10581c2739a9ee339c">Mehr ...</a><br /></td></tr>
+<tr class="separator:ad7a1305fb2454e10581c2739a9ee339c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">Ausführliche Beschreibung</h2>
+<div class="textblock"><p>Funktionen zur Initialisierung der Gitterblöcke mit verschiendenen Anfangs-/ Randbedingungen. </p>
+<dl class="section author"><dt>Autor</dt><dd>Wigg </dd></dl>
+<dl class="section date"><dt>Datum</dt><dd>30 January 2020 </dd></dl>
+</div><h2 class="groupheader">Dokumentation der Funktionen</h2>
+<a id="af661b5d73e9741864c94bcbe717e7431"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af661b5d73e9741864c94bcbe717e7431">&#9670;&nbsp;</a></span>initHotSpot()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void initHotSpot </td>
+          <td>(</td>
+          <td class="paramtype">double *&#160;</td>
+          <td class="paramname"><em>t</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>size</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>bheight</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>bwidth</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>imin</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>jmin</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>g</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Initialisiert einen Gitterblock mit einem heißen "Fleck" in der Mitte des Feldes. </p>
+<p>Siehe <a class="el" href="scenarios_8h.html#a7036e708b60dbbae601741bd7e3cbbe0" title="Initialisiert einen Gitterblock mit Randbedingungen. ">initTopLeftHotBotRightCold()</a> für Parameterliste. </p>
+
+</div>
+</div>
+<a id="ad7a1305fb2454e10581c2739a9ee339c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad7a1305fb2454e10581c2739a9ee339c">&#9670;&nbsp;</a></span>initRightHot()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void initRightHot </td>
+          <td>(</td>
+          <td class="paramtype">double *&#160;</td>
+          <td class="paramname"><em>t</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>size</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>bheight</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>bwidth</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>imin</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>jmin</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>g</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Initialisiert einen Gitterblock mit 25.0 auf dem rechten Rand. </p>
+<p>Siehe <a class="el" href="scenarios_8h.html#a7036e708b60dbbae601741bd7e3cbbe0" title="Initialisiert einen Gitterblock mit Randbedingungen. ">initTopLeftHotBotRightCold()</a> für Parameterliste. </p>
+
+</div>
+</div>
+<a id="a7036e708b60dbbae601741bd7e3cbbe0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7036e708b60dbbae601741bd7e3cbbe0">&#9670;&nbsp;</a></span>initTopLeftHotBotRightCold()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void initTopLeftHotBotRightCold </td>
+          <td>(</td>
+          <td class="paramtype">double *&#160;</td>
+          <td class="paramname"><em>t</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>size</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>bheight</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>bwidth</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>imin</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>jmin</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>g</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Initialisiert einen Gitterblock mit Randbedingungen. </p>
+<p>Initialisiert den Gitterblock mit 0.0 für alle inneren Punkte, mit 25.0 am oberen und am linken Rand und mit -25.0 am unteren und am rechten Rand des Gesamtgitters.</p>
+<dl class="params"><dt>Parameter</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">t</td><td>Gitterblock. </td></tr>
+    <tr><td class="paramname">size</td><td>Seitenlänge des Gesamtgitters. </td></tr>
+    <tr><td class="paramname">bsize</td><td>Seitenlänge der Gitterblocks. </td></tr>
+    <tr><td class="paramname">imin</td><td>Index i des oberen linken Punktes des Blocks. </td></tr>
+    <tr><td class="paramname">jmin</td><td>Index j des oberen linken Punktes des Blocks. </td></tr>
+    <tr><td class="paramname">g</td><td>Überschneidungsbreite der Blöcke. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+</div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+Erzeugt von &#160;<a href="http://www.doxygen.org/index.html">
+<img class="footer" src="doxygen.png" alt="doxygen"/>
+</a> 1.8.13
+</small></address>
+</body>
+</html>

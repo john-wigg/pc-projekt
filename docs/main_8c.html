@@ -12,6 +12,12 @@
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    extensions: ["tex2jax.js"],
+    jax: ["input/TeX","output/HTML-CSS"],
+});
+</script><script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js"></script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
@@ -76,7 +82,7 @@ $(function() {
 <code>#include &lt;string.h&gt;</code><br />
 <code>#include &quot;<a class="el" href="blocks_8h_source.html">blocks.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="io_8h_source.html">io.h</a>&quot;</code><br />
-<code>#include &quot;scenarios.h&quot;</code><br />
+<code>#include &quot;<a class="el" href="scenarios_8h_source.html">scenarios.h</a>&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include-Abhängigkeitsdiagramm für main.c:</div>
 <div class="dyncontent">
@@ -100,6 +106,12 @@ typedef struct <a class="el" href="structconfig__s.html">config_s</a>&#160;</td>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Funktionen</h2></td></tr>
+<tr class="memitem:a587b9a1044eb909937b28429e6078027"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8c.html#a587b9a1044eb909937b28429e6078027">writeSendBuf</a> (double *sendbuf, double *sourcebuf, int bwidth, int bufw, int bufh, int ioff, int joff)</td></tr>
+<tr class="memdesc:a587b9a1044eb909937b28429e6078027"><td class="mdescLeft">&#160;</td><td class="mdescRight">Beschreibt einen Sendebuffer mit den Daten eines Bereiches des Quellbuffers (Gitters).  <a href="#a587b9a1044eb909937b28429e6078027">Mehr ...</a><br /></td></tr>
+<tr class="separator:a587b9a1044eb909937b28429e6078027"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0d5375e33f5dbd5f30c4b5bb32657de6"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="main_8c.html#a0d5375e33f5dbd5f30c4b5bb32657de6">readRecvBuf</a> (double *recvbuf, double *targetbuf, int bwidth, int bufw, int bufh, int ioff, int joff)</td></tr>
+<tr class="memdesc:a0d5375e33f5dbd5f30c4b5bb32657de6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Beschreibt einen Bereich des Zielbuffers (Gitters) mit Daten aus einem Empfangsbuffer.  <a href="#a0d5375e33f5dbd5f30c4b5bb32657de6">Mehr ...</a><br /></td></tr>
+<tr class="separator:a0d5375e33f5dbd5f30c4b5bb32657de6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3c04138a5bfe5d72780bb7e82a18e627"><td class="memItemLeft" align="right" valign="top"><a id="a3c04138a5bfe5d72780bb7e82a18e627"></a>
 int&#160;</td><td class="memItemRight" valign="bottom"><b>main</b> (int argc, char **argv)</td></tr>
 <tr class="separator:a3c04138a5bfe5d72780bb7e82a18e627"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -108,7 +120,168 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>main</b> (int argc, ch
 <div class="textblock"><p>Main-Datei des Projektes. </p>
 <dl class="section author"><dt>Autor</dt><dd>Wigg </dd></dl>
 <dl class="section date"><dt>Datum</dt><dd>29 December 2019 </dd></dl>
-</div></div><!-- contents -->
+</div><h2 class="groupheader">Dokumentation der Funktionen</h2>
+<a id="a0d5375e33f5dbd5f30c4b5bb32657de6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0d5375e33f5dbd5f30c4b5bb32657de6">&#9670;&nbsp;</a></span>readRecvBuf()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static void readRecvBuf </td>
+          <td>(</td>
+          <td class="paramtype">double *&#160;</td>
+          <td class="paramname"><em>recvbuf</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double *&#160;</td>
+          <td class="paramname"><em>targetbuf</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>bwidth</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>bufw</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>bufh</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>ioff</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>joff</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Beschreibt einen Bereich des Zielbuffers (Gitters) mit Daten aus einem Empfangsbuffer. </p>
+<dl class="params"><dt>Parameter</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">recvbuf</td><td>Empfangsbuffer </td></tr>
+    <tr><td class="paramname">targetbuf</td><td>Zielbuffer (Gitter) </td></tr>
+    <tr><td class="paramname">bwidth</td><td>Zeilenlänge des Zielbuffers </td></tr>
+    <tr><td class="paramname">bufw</td><td>Zeilenlänge des Empfangsbuffers </td></tr>
+    <tr><td class="paramname">bufh</td><td>Spaltenlänge des Empfangsbuffers </td></tr>
+    <tr><td class="paramname">ioff</td><td>Index i der oberen linken Ecke des zu sendenden Bereiches </td></tr>
+    <tr><td class="paramname">joff</td><td>Index j der oberen linken Ecke des zu sendenden Bereiches </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a587b9a1044eb909937b28429e6078027"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a587b9a1044eb909937b28429e6078027">&#9670;&nbsp;</a></span>writeSendBuf()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static void writeSendBuf </td>
+          <td>(</td>
+          <td class="paramtype">double *&#160;</td>
+          <td class="paramname"><em>sendbuf</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double *&#160;</td>
+          <td class="paramname"><em>sourcebuf</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>bwidth</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>bufw</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>bufh</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>ioff</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>joff</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Beschreibt einen Sendebuffer mit den Daten eines Bereiches des Quellbuffers (Gitters). </p>
+<dl class="params"><dt>Parameter</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">sendbuf</td><td>Sendebuffer </td></tr>
+    <tr><td class="paramname">sourcebuf</td><td>Quellenbuffer (Gitter) </td></tr>
+    <tr><td class="paramname">bwidth</td><td>Zeilenlänge des Quellenbuffers </td></tr>
+    <tr><td class="paramname">bufw</td><td>Zeilenlänge des Sendebuffers </td></tr>
+    <tr><td class="paramname">bufh</td><td>Spaltenlänge des Sendebuffers </td></tr>
+    <tr><td class="paramname">ioff</td><td>Index i der oberen linken Ecke des zu sendenden Bereiches </td></tr>
+    <tr><td class="paramname">joff</td><td>Index j der oberen linken Ecke des zu sendenden Bereiches </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+</div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Erzeugt von &#160;<a href="http://www.doxygen.org/index.html">

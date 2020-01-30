@@ -12,6 +12,12 @@
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    extensions: ["tex2jax.js"],
+    jax: ["input/TeX","output/HTML-CSS"],
+});
+</script><script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js"></script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
@@ -256,6 +262,7 @@ Funktionen</h2></td></tr>
     <tr><td class="paramname">alpha</td><td>Thermische Diffusivität. </td></tr>
     <tr><td class="paramname">a</td><td>Seitenlänge des Gitters. </td></tr>
     <tr><td class="paramname">scenario</td><td>Simulationsszenario. Mögliche Werte: TOPLEFTHOTBOTRIGHTCOLD, RIGHTHOT, HOTSPOT, oder Dateiname um eine PPM-Datei einzulesen. </td></tr>
+    <tr><td class="paramname">ostep</td><td>Schrittabstand für die Zwischenausgabe </td></tr>
     <tr><td class="paramname">filename</td><td>Dateiname der Inputdatei. </td></tr>
   </table>
   </dd>

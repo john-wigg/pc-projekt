@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['readinputfile',['readInputFile',['../io_8h.html#a03798281ce0e62e2f8b1103e3a369945',1,'io.c']]]
+  ['printppm',['printPPM',['../io_8h.html#a7ab311e346fcd326a984be176e0fc299',1,'io.c']]]
 ];

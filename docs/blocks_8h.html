@@ -12,6 +12,12 @@
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    extensions: ["tex2jax.js"],
+    jax: ["input/TeX","output/HTML-CSS"],
+});
+</script><script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js"></script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
@@ -59,7 +65,8 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
-<a href="#enum-members">Aufzählungen</a>  </div>
+<a href="#enum-members">Aufzählungen</a> &#124;
+<a href="#func-members">Funktionen</a>  </div>
   <div class="headertitle">
 <div class="title">blocks.h-Dateireferenz</div>  </div>
 </div><!--header-->
@@ -93,6 +100,15 @@ Aufzählungen</h2></td></tr>
  }<tr class="memdesc:a06fc87d81c62e9abb8790b6e5713c55b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tags zur Zuordnung der Überschneidungsbereiche.  <a href="blocks_8h.html#a06fc87d81c62e9abb8790b6e5713c55b">Mehr ...</a><br /></td></tr>
 </td></tr>
 <tr class="separator:a06fc87d81c62e9abb8790b6e5713c55b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
+Funktionen</h2></td></tr>
+<tr class="memitem:afa089db1b3da47e86408c94a18f9d101"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="blocks_8h.html#afa089db1b3da47e86408c94a18f9d101">swap</a> (double **t1, double **t2)</td></tr>
+<tr class="memdesc:afa089db1b3da47e86408c94a18f9d101"><td class="mdescLeft">&#160;</td><td class="mdescRight">Vertauscht die Pointer zweier Gitterblöcke.  <a href="#afa089db1b3da47e86408c94a18f9d101">Mehr ...</a><br /></td></tr>
+<tr class="separator:afa089db1b3da47e86408c94a18f9d101"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acae04e057e15b7fb5ea7d441e1999e35"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="blocks_8h.html#acae04e057e15b7fb5ea7d441e1999e35">updatePoint</a> (double *t1, double *t2, int i, int j, double adjstep, int size)</td></tr>
+<tr class="memdesc:acae04e057e15b7fb5ea7d441e1999e35"><td class="mdescLeft">&#160;</td><td class="mdescRight">Aktualisiert einen Gitterpunkt.  <a href="#acae04e057e15b7fb5ea7d441e1999e35">Mehr ...</a><br /></td></tr>
+<tr class="separator:acae04e057e15b7fb5ea7d441e1999e35"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Ausführliche Beschreibung</h2>
 <div class="textblock"><p>Methoden zur Arbeit mit Gitterblöcken. </p>
@@ -113,6 +129,125 @@ Aufzählungen</h2></td></tr>
 
 <p>Tags zur Zuordnung der Überschneidungsbereiche. </p>
 <p>Gibt an, in welche Richtung der Überschneidungsbereich gesendet wird. Sendet zum Beispiel ein Block ihren Überschneidungsbereich an den Block links von ihm, so wird der Tag <code>T_SEND_E</code> verwendet. </p>
+
+</div>
+</div>
+<h2 class="groupheader">Dokumentation der Funktionen</h2>
+<a id="afa089db1b3da47e86408c94a18f9d101"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afa089db1b3da47e86408c94a18f9d101">&#9670;&nbsp;</a></span>swap()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static void swap </td>
+          <td>(</td>
+          <td class="paramtype">double **&#160;</td>
+          <td class="paramname"><em>t1</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double **&#160;</td>
+          <td class="paramname"><em>t2</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Vertauscht die Pointer zweier Gitterblöcke. </p>
+<dl class="params"><dt>Parameter</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">t1</td><td>Pointer zum ersten Gitterblock. </td></tr>
+    <tr><td class="paramname">t2</td><td>Pointer zum zweiten Gitterblokc. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="acae04e057e15b7fb5ea7d441e1999e35"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acae04e057e15b7fb5ea7d441e1999e35">&#9670;&nbsp;</a></span>updatePoint()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static void updatePoint </td>
+          <td>(</td>
+          <td class="paramtype">double *&#160;</td>
+          <td class="paramname"><em>t1</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double *&#160;</td>
+          <td class="paramname"><em>t2</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>i</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>j</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>adjstep</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>size</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Aktualisiert einen Gitterpunkt. </p>
+<p>Führt einen einzelnen Euler-Vorwärts-Schritt für einen Punkt auf dem Gitter aus und speichert das Ergebnis in ein neues Gitter.</p>
+<dl class="params"><dt>Parameter</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">t1</td><td>Neues Gitter. </td></tr>
+    <tr><td class="paramname">t2</td><td>Altes Gitter. </td></tr>
+    <tr><td class="paramname">i</td><td>Index i des Punktes auf dem Gitter. </td></tr>
+    <tr><td class="paramname">j</td><td>Index j des Punktes auf dem Gitter. </td></tr>
+    <tr><td class="paramname">adjstep</td><td>Angepasste Schrittweite des Euler-Schritts: \(\alpha \frac{\Delta t}{h^2}\). </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
