@@ -2,3 +2,5 @@ PROJECT_NAME = "Wärmeleitung auf einem 2D-Gitter"
 HTML_OUTPUT = docs
 OUTPUT_LANGUAGE = German
 GENERATE_LATEX = No
+EXTRACT_STATIC=Yes
+USE_MATHJAX = Yes
