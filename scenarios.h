@@ -1,7 +1,13 @@
+/**
+ * @file scenarios.h
+ * @author Wigg
+ * @date 30 January 2020
+ * @brief Funktionen zur Initialisierung der Gitterblöcke mit verschiendenen
+ * Anfangs-/ Randbedingungen.
+ */
+
 #ifndef SCENARIOS_H_
 #define SCENARIOS_H_
-
-#include "scenarios.h"
 
 /**
  * @brief Initialisiert einen Gitterblock mit Randbedingungen.
